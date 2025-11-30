@@ -12,7 +12,7 @@ export default function ButtonPage() {
 			<div className="relative">
 				<h2 className="text-6d font-11d">Installation</h2>
 				<HighlightedCode
-					code="bunx @playoffthecuff/s-line add button"
+					code="bunx @playoffthecuff/s-line@latest add button"
 					language="yaml"
 					lineNumbers={false}
 				/>
