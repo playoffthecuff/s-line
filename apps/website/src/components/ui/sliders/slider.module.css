@@ -1,0 +1,38 @@
+.oklch-gradient {
+  background: linear-gradient(
+    to right,
+    oklch(0.646 0.261 0),
+    oklch(0.63 0.252 30),
+    oklch(0.76 0.176 60),
+    oklch(0.86 0.175 90),
+    oklch(0.934 0.197 105),
+    oklch(0.937 0.222 120),
+    oklch(0.87 0.239 150),
+    oklch(0.894 0.161 180),
+    oklch(0.838 0.144 210),
+    oklch(0.71 0.162 240),
+    oklch(0.46 0.3 270),
+    oklch(0.55 0.293 300),
+    oklch(0.697 0.317 330),
+    oklch(0.646 0.261 360)
+  );
+}
+/* .chroma-gradient {
+  background: linear-gradient(
+    to right,
+    oklch(0.7 0.3 0),
+    oklch(0.7 0.3 30),
+    oklch(0.7 0.3 60),
+    oklch(0.7 0.3 90),
+    oklch(0.7 0.3 105),
+    oklch(0.7 0.3 120),
+    oklch(0.7 0.3 150),
+    oklch(0.7 0.3 180),
+    oklch(0.7 0.3 210),
+    oklch(0.7 0.3 240),
+    oklch(0.7 0.3 270),
+    oklch(0.7 0.3 300),
+    oklch(0.7 0.3 330),
+    oklch(0.7 0.3 360)
+  );
+} */
