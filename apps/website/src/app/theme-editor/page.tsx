@@ -150,7 +150,7 @@ export default function ThemeEditorPage() {
 			>
 				<div className="py-12d px-16d flex flex-col gap-10d">
 					{/** biome-ignore lint/a11y/noLabelWithoutControl: '' */}
-					<label>Link Color</label>
+					<label>Primary Color</label>
 					<OklchSlider
 						initialValue={initialValues.primaryHue}
 						onChange={(v) => setPrimaryHue(+v)}
