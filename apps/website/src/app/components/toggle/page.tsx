@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Toggle } from "@/components/ui/buttons/toggle";
+import { Toggle } from "@/components/ui/toggle/toggle";
 import { HighlightedCode } from "@/components/ui/highlighted-code";
 import { DislikeIcon } from "@/components/ui/icons/dislike";
 import { HeartIcon } from "@/components/ui/icons/heart";

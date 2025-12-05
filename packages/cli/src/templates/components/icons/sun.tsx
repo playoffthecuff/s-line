@@ -1,4 +1,4 @@
-import type { IconProps } from "./types";
+import type { IconProps } from "./types.js";
 
 export function SunIcon({ size = "1.25em", strokeWidth = 2 }: IconProps) {
 	return (

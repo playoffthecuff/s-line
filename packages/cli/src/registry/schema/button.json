@@ -1,0 +1,8 @@
+{
+	"files":[{"path": "button/button.tsx"}],
+	"name":"button",
+	"type":"component",
+	"dependencies":["clsx", "class-variance-authority"],
+	"description":"",
+	"registryDependencies":["use-wave-animate.json"]
+}

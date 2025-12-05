@@ -1,4 +1,4 @@
-import type { IconProps } from "./types";
+import type { IconProps } from "./types.js";
 
 export function ErrorIcon({ width = "1.25em", height = "1.25em" }: IconProps) {
 	return (

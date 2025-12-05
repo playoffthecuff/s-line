@@ -1,6 +1,6 @@
 {
   "name": "@playoffthecuff/s-line",
-  "version": "0.0.9",
+  "version": "0.0.27",
   "description": "",
   "license": "ISC",
   "bin": {
@@ -9,7 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "check": "bunx tsc --noEmit",
-    "build": "bun ./src/scripts/build"
+    "build": "bun ./src/scripts/build",
+    "schema:item": "bun ./src/scripts/item-schema"
   },
   "keywords": [],
   "author": "playoffthecuff",
@@ -17,7 +18,8 @@
   "dependencies": {
     "commander": "^14.0.2",
     "fs": "^0.0.1-security",
-    "inquirer": "^12.10.0"
+    "inquirer": "^12.10.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",

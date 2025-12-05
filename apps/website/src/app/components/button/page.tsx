@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/buttons/button";
+import { Button } from "@/components/ui/button/button";
 import { HighlightedCode } from "@/components/ui/highlighted-code";
 import { SparkleIcon } from "@/components/ui/icons/sparkle";
 

@@ -2,6 +2,6 @@ await Bun.build({
   entrypoints: ['./src/index'],
   outdir: './build',
   target: "bun",
-  external: ["commander", "inquirer"],
+  external: ["commander", "inquirer", "zod"],
   minify: true,
 });

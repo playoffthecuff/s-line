@@ -27,7 +27,7 @@ const buttonVariants = cva(
 				false: null,
 			},
 			aspect: {
-				square: "px-[0.375em] gap-x-[0.5em]",
+				square: "px-[calc(0.375em-2px)] gap-x-[0.5em]",
 				normal:
 					"px-[0.75em] has-[>svg:last-child]:pe-[0.5625em] has-[>svg:first-child]:ps-[0.5625em] gap-x-[0.5em]",
 				wide: "px-[1em] has-[>svg:last-child]:pe-[0.8125em] has-[>svg:first-child]:ps-[0.8125em] gap-x-[0.625em]",
@@ -43,21 +43,21 @@ const buttonVariants = cva(
 				subtle: null,
 				outline:
 					"before:outline-offset-1.6 border-1.6 focus-visible:border-none",
-				text: null,
+				ghost: null,
 				link: "underline",
 			},
 			disabled: {
 				false: null,
-				true: "contrast-40 grayscale-65 saturate-75 pointer-events-none opacity-90",
+				true: "contrast-50 grayscale-50 saturate-75 pointer-events-none opacity-90 brightness-50",
 			},
 			loading: {
 				false: null,
-				true: "before:backdrop-grayscale-40 before:backdrop-contrast-65 before:backdrop-saturate-25 opacity-90 pointer-events-none",
+				true: "before:backdrop-grayscale-70 before:backdrop-contrast-50 before:backdrop-saturate-55 opacity-90 brightness-85 pointer-events-none ",
 			},
 		},
 		compoundVariants: [
 			{
-				appearance: ["outline", "solid", "subtle", "text"],
+				appearance: ["outline", "solid", "subtle", "ghost"],
 				lifted: true,
 				className:
 					"shadow-lifted-neutral hover:shadow-lifted-neutral-hover active:shadow-lifted-neutral-active",
@@ -89,7 +89,7 @@ const buttonVariants = cva(
 				],
 			},
 			{
-				appearance: "text",
+				appearance: "ghost",
 				intent: "primary",
 				className: [
 					"text-primary",
@@ -130,7 +130,7 @@ const buttonVariants = cva(
 				],
 			},
 			{
-				appearance: "text",
+				appearance: "ghost",
 				intent: "destructive",
 				className: [
 					"text-error",
@@ -173,7 +173,7 @@ const buttonVariants = cva(
 				],
 			},
 			{
-				appearance: "text",
+				appearance: "ghost",
 				intent: "visited",
 				className: [
 					"text-visited",
@@ -214,7 +214,7 @@ const buttonVariants = cva(
 				],
 			},
 			{
-				appearance: "text",
+				appearance: "ghost",
 				intent: "warning",
 				className: [
 					"text-warning",
@@ -255,7 +255,7 @@ const buttonVariants = cva(
 				],
 			},
 			{
-				appearance: "text",
+				appearance: "ghost",
 				intent: "success",
 				className: [
 					"text-success",
@@ -296,7 +296,7 @@ const buttonVariants = cva(
 				],
 			},
 			{
-				appearance: "text",
+				appearance: "ghost",
 				intent: "secondary",
 				className: [
 					"text-muted",

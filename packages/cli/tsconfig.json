@@ -40,5 +40,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
   },
-  "exclude": ["templates/**/*"]
+  "exclude": ["src/templates/**/*"]
 }
