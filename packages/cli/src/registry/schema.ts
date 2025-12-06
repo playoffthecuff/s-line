@@ -1,8 +1,6 @@
 import { z } from "zod/v4";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { writeFileSync } from "node:fs";
 
 const registryItemFileSchema = z.object({
 	path: z.string(),
