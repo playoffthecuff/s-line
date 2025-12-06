@@ -13,7 +13,7 @@ export function HighlightedCode({
 	return (
 		<div className="max-w-full">
 			<CopyButton
-				className="absolute top-7 right-6	"
+				className="top-7 right-6"
 				animationTimeout={1000}
 				onClick={() => navigator.clipboard.writeText(code)}
 			/>

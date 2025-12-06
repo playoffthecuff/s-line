@@ -52,8 +52,8 @@ export default defineConfig({
 	rules: [
 		[/^bg-(.+)\\/(\\d+)d$/,	([_, color, alpha]) => ({"background-color": \` oklch(from var(--colors-\${color}) l c h / \${2 ** -(0.125 * +alpha)})\`,}),],
 		[/^text-(.+)\\/(\\d+)d$/,	([_, color, alpha]) => ({"color": \` oklch(from var(--colors-\${color}) l c h / \${2 ** -(0.125 * +alpha)})\`,}),],
-		[/^bg-(.+)\\|(\\d+)l$/,	([_, color, l]) => ({"background-color": \` oklch(from var(--colors-\${color}) calc(l * \${l} / 100	) c h)\`,}),],
-		[/^bg-(.+)\\|(\\d+)c$/,	([_, color, c]) => ({"background-color": \` oklch(from var(--colors-\${color}) l calc(c * \${c} / 100	) h)\`,}),],
+		[/^bg-(.+)\\|(?:(-))?(\\d+)l$/,	([_, color, minus, l]) => ({"background-color": \` oklch(from var(--colors-\${color}) calc(l \${minus ? '-' : '+'} \${+l / 100}) c h)\`,}),],
+		[/^bg-(.+)\\|(?:(-))?(\\d+)c$/,	([_, color, minus, c]) => ({"background-color": \` oklch(from var(--colors-\${color}) l calc(c \${minus ? '-' : '+'} \${+c}) h)\`,}),],
 		[/^shadow-(d|l)-(\\d+)d$/, ([_, theme, value]) => ({'box-shadow': \`calc(var(--spacing-size) * \${2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * \${2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * \${2 * 2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * \${0.5 * 2 ** (0.25 * +value)}rem) oklch(from var(\${theme === "d" ? '--colors-neutral-1000' : '--colors-neutral-450'}) l c h / 0.5)\`})],
 		[/^m(x|y|t|r|b|l|s|e)?-(\\d+)d$/, ([_, side, value]) => ({[\`margin\${side ? \`-\${${side}[side]}\` : ''}\`]: \`calc(var(--spacing-size) * \${2 ** (0.25 * +value)}rem)\`})],
 		[/^p(x|y|t|r|b|l|s|e)?-(\\d+)d$/, ([_, side, value]) => ({[\`padding\${side ? \`-\${${side}[side]}\` : ''}\`]: \`calc(var(--spacing-size) * \${2 ** (0.25 * +value)}rem)\`})],

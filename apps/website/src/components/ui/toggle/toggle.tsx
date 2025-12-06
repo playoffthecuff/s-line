@@ -39,14 +39,15 @@ const buttonVariants = cva(
 				outline:
 					"before:outline-offset-1.6 border-1.6 focus-visible:border-none",
 				ghost: null,
+				text: null,
 			},
 			disabled: {
 				false: null,
-				true: "contrast-50 grayscale-50 saturate-75 pointer-events-none opacity-90 brightness-50",
+				true: "saturate-50 opacity-50 pointer-events-none",
 			},
 			loading: {
 				false: null,
-				true: "before:backdrop-grayscale-70 before:backdrop-contrast-50 before:backdrop-saturate-55 opacity-90 brightness-85 pointer-events-none ",
+				true: "saturate-50 opacity-50 pointer-events-none",
 			},
 			effect: {
 				fill: "[&[data-pressed]>svg]:fill-current",
@@ -55,7 +56,7 @@ const buttonVariants = cva(
 		},
 		compoundVariants: [
 			{
-				appearance: ["outline", "solid", "subtle", "ghost"],
+				appearance: ["outline", "solid", "subtle", "ghost", "text"],
 				lifted: true,
 				className:
 					"shadow-lifted-neutral hover:shadow-lifted-neutral-hover active:shadow-lifted-neutral-active",
@@ -64,7 +65,7 @@ const buttonVariants = cva(
 				appearance: "solid",
 				intent: "primary",
 				className:
-					"text-neutral-light bg-primary-500 hover:bg-primary-500|119l focus-visible:bg-primary-500|119l active:bg-primary-500|84l",
+					"text-neutral-light bg-primary-500 hover:bg-primary-500|10l focus-visible:bg-primary-500|10l active:bg-primary-500|-5l",
 			},
 			{
 				appearance: "subtle",
@@ -81,7 +82,7 @@ const buttonVariants = cva(
 				className: [
 					"text-primary",
 					"hover:bg-primary-500/25d active:bg-primary-500/17d focus-visible:bg-primary-500/25d",
-					"border-primary-600 hover:border-primary-600/50 active:border-primary-600/25",
+					"border-primary-600",
 					"dark:hover:bg-primary-500/14d dark:active:bg-primary-500/8d dark:focus-visible:bg-primary-500/14d",
 					"dark:border-primary-250 dark:hover:border-primary-250/50 dark:active:border-primary-250/25",
 				],
@@ -95,12 +96,17 @@ const buttonVariants = cva(
 					"dark:hover:bg-primary-500/14d dark:active:bg-primary-500/8d dark:focus-visible:bg-primary-500/14d",
 				],
 			},
+			{
+				appearance: "text",
+				intent: "primary",
+				className: ["text-primary"],
+			},
 
 			{
 				appearance: "solid",
 				intent: "destructive",
 				className:
-					"text-neutral-light bg-error-500 hover:bg-error-500|119l focus-visible:bg-error-500|119l active:bg-error-500|84l",
+					"text-neutral-light bg-error-500 hover:bg-error-500|10l focus-visible:bg-error-500|10l active:bg-error-500|-5l",
 			},
 			{
 				appearance: "subtle",
@@ -117,7 +123,7 @@ const buttonVariants = cva(
 				className: [
 					"text-error",
 					"hover:bg-error-500/25d active:bg-error-500/17d focus-visible:bg-error-500/25d",
-					"border-error-600 hover:border-error-600/50 active:border-error-600/25",
+					"border-error-600",
 					"dark:hover:bg-error-500/14d dark:active:bg-error-500/8d dark:focus-visible:bg-error-500/14d",
 					"dark:border-error-250 dark:hover:border-error-250/50 active:hover:border-error-250/25",
 				],
@@ -131,12 +137,17 @@ const buttonVariants = cva(
 					"dark:hover:bg-error-500/14d dark:active:bg-error-500/8d dark:focus-visible:bg-error-500/14d",
 				],
 			},
+			{
+				appearance: "text",
+				intent: "destructive",
+				className: ["text-error"],
+			},
 
 			{
 				appearance: "solid",
 				intent: "visited",
 				className:
-					"text-neutral-light bg-visited-500 hover:bg-visited-500|119l focus-visible:bg-visited-500|119l active:bg-visited-500|84l",
+					"text-neutral-light bg-visited-500 hover:bg-visited-500|10l focus-visible:bg-visited-500|10l active:bg-visited-500|-5l",
 			},
 			{
 				appearance: "subtle",
@@ -155,7 +166,7 @@ const buttonVariants = cva(
 				className: [
 					"text-visited",
 					"hover:bg-visited-500/25d active:bg-visited-500/17d focus-visible:bg-visited-500/25d",
-					"border-visited-600 hover:border-visited-600/50 active:border-visited-600/25",
+					"border-visited-600",
 					"dark:hover:bg-visited-500/14d dark:active:bg-visited-500/8d dark:focus-visible:bg-visited-500/14d",
 					"dark:border-visited-250 dark:hover:border-visited-250/50 active:hover:border-visited-250/25",
 				],
@@ -169,12 +180,17 @@ const buttonVariants = cva(
 					"dark:hover:bg-visited-500/14d dark:active:bg-visited-500/8d dark:focus-visible:bg-visited-500/14d",
 				],
 			},
+			{
+				appearance: "text",
+				intent: "visited",
+				className: ["text-visited"],
+			},
 
 			{
 				appearance: "solid",
 				intent: "warning",
 				className:
-					"text-neutral-dark bg-warning-300 hover:bg-warning-300|119l focus-visible:bg-warning-300|119l active:bg-warning-300|84l",
+					"text-neutral-dark bg-warning-300 hover:bg-warning-300|10l focus-visible:bg-warning-300|10l active:bg-warning-300|-5l",
 			},
 			{
 				appearance: "subtle",
@@ -191,7 +207,7 @@ const buttonVariants = cva(
 				className: [
 					"text-warning",
 					"hover:bg-warning-500/25d active:bg-warning-500/17d focus-visible:bg-warning-500/25d",
-					"border-warning-600 hover:border-warning-600/50 active:border-warning-600/25",
+					"border-warning-600",
 					"dark:hover:bg-warning-500/14d dark:active:bg-warning-500/8d dark:focus-visible:bg-warning-500/14d",
 					"dark:border-warning-250 dark:hover:border-warning-250/50 dark:active:border-warning-250/25",
 				],
@@ -210,7 +226,7 @@ const buttonVariants = cva(
 				appearance: "solid",
 				intent: "success",
 				className:
-					"text-neutral-dark bg-success-350 hover:bg-success-350|119l focus-visible:bg-success-350|119l active:bg-success-350|84l",
+					"text-neutral-dark bg-success-350 hover:bg-success-350|10l focus-visible:bg-success-350|10l active:bg-success-350|-5l",
 			},
 			{
 				appearance: "subtle",
@@ -227,7 +243,7 @@ const buttonVariants = cva(
 				className: [
 					"text-success",
 					"hover:bg-success-500/25d active:bg-success-500/17d focus-visible:bg-success-500/17d",
-					"border-success-600 hover:border-success-600/50 active:border-success-600/25",
+					"border-success-600",
 					"dark:hover:bg-success-500/14d dark:active:bg-success-500/8d dark:focus-visible:bg-success-500/8d",
 					"dark:border-success-250 dark:hover:border-success-250/50 dark:active:border-success-250/25",
 				],
@@ -241,12 +257,17 @@ const buttonVariants = cva(
 					"dark:hover:bg-success-500/14d dark:active:bg-success-500/8d dark:focus-visible:bg-success-500/14d",
 				],
 			},
+			{
+				appearance: "text",
+				intent: "success",
+				className: ["text-success"],
+			},
 
 			{
 				appearance: "solid",
 				intent: "secondary",
 				className:
-					"text-neutral-light bg-neutral-500 hover:bg-neutral-500|119l focus-visible:bg-neutral-500|119l active:bg-neutral-500|84l",
+					"text-neutral-light bg-neutral-500 hover:bg-neutral-500|10l focus-visible:bg-neutral-500|10l active:bg-neutral-500|-5l",
 			},
 			{
 				appearance: "subtle",
@@ -263,7 +284,7 @@ const buttonVariants = cva(
 				className: [
 					"text-muted",
 					"hover:bg-neutral-500/25d active:bg-neutral-500/17d focus-visible:bg-neutral-500/17d",
-					"border-neutral-600 hover:border-neutral-600/50 active:border-neutral-600/25",
+					"border-neutral-600",
 					"dark:hover:bg-neutral-500/14d dark:active:bg-neutral-500/8d dark:focus-visible:bg-neutral-500/5d",
 					"dark:border-neutral-250 dark:hover:border-neutral-250/50 dark:active:border-neutral-250/25",
 				],
@@ -276,6 +297,11 @@ const buttonVariants = cva(
 					"hover:bg-neutral-500/25d active:bg-neutral-500/17d focus-visible:bg-neutral-500/25d",
 					"dark:hover:bg-neutral-500/14d dark:active:bg-neutral-500/8d dark:focus-visible:bg-neutral-500/14d",
 				],
+			},
+			{
+				appearance: "text",
+				intent: "secondary",
+				className: ["text-muted"],
 			},
 		],
 		defaultVariants: {
@@ -319,6 +345,7 @@ export function Toggle({
 		onKeyUp,
 		onMouseDown,
 		onMouseUp,
+		disabled: appearance === "text",
 	});
 	return (
 		<BaseToggle
@@ -329,13 +356,13 @@ export function Toggle({
 					intent,
 					size,
 					shape,
-					className,
 					appearance,
 					disabled,
 					loading,
 					lifted,
 					effect,
 				}),
+				className,
 			)}
 			onKeyDown={effects.onKeyDown}
 			onKeyUp={effects.onKeyUp}
