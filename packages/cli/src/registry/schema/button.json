@@ -1,5 +1,5 @@
 {
-	"$schema": "https://s-line-two.vercel.app/item-schema.json",
+	"$schema": "https://s3-line.vercel.app/item-schema.json",
 	"files":[{"path": "button/button.tsx"}],
 	"name":"button",
 	"type":"component",

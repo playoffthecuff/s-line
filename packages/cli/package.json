@@ -1,10 +1,10 @@
 {
-  "name": "@playoffthecuff/s-line",
-  "version": "0.0.27",
+  "name": "@playoffthecuff/s3-line",
+  "version": "0.0.1",
   "description": "",
   "license": "ISC",
   "bin": {
-    "@playoffthecuff/s-line@latest": "build/index.js"
+    "@playoffthecuff/s3-line@latest": "build/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
