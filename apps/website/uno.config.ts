@@ -1,343 +1,476 @@
+import { formatCSS, getOkLCHMaxChroma, parseCSS } from "colorizr";
 import { defineConfig, presetWind4 } from "unocss";
 
+const computeOklch = (l: number, h: number, c: number) => formatCSS({ l, c: getOkLCHMaxChroma({ c: 0, h, l }) * c, h }, { format: "oklch", precision: 4 });
+
+const BG_CONTRAST_LAYER_CONFIG = {
+	LIGHT: [850, 900, 950, 1000],
+	DARK: [350, 300, 250, 200],
+	CONTRAST_DELTA: 408,
+} as const;
+
+const FG_LAYER_CONFIG = {
+	LIGHT: [100, 150, 200, 250],
+	DARK: [950, 900, 850, 800],
+	LIGHT_MUTED: [550, 600, 650, 700],
+	DARK_MUTED: [600, 550, 500, 450],
+};
+
+const SURFACE_CONFIG = {
+	MAX_LIGHTNESS: 1000,
+	MAX_RANGE_LIGHTNESS: 950,
+	MIN_RANGE_LIGHTNESS: 50,
+	THRESHOLD_BG_LIGHTNESS: 200,
+	THRESHOLD_TEXT_LIGHTNESS: 600,
+	LIGHT_BG_DELTA_LIGHTNESS: 20,
+	DARK_BG_DELTA_LIGHTNESS: 32,
+	LIGHT_TEXT_DELTA_LIGHTNESS: 36,
+	DARK_TEXT_DELTA_LIGHTNESS: 24,
+	MIN_LIGHT_TEXT_LIGHTNESS: 400,
+	MAX_DARK_TEXT_LIGHTNESS: 750,
+	MAX_LIGHT_TRANSPARENCY: 20,
+	MIN_LIGHT_TRANSPARENCY: 10,
+	MAX_DARK_TRANSPARENCY: 32,
+	MIN_DARK_TRANSPARENCY: 20,
+	MUTED_BORDER_TRANSPARENCY: 50,
+	HOVER_TRANSPARENCY_K: 1.8,
+	ACTIVE_TRANSPARENCY_K: 2.5,
+	BG_DELTA_LIGHTNESS_K: 1.8,
+} as const;
+
 export default defineConfig({
-	presets: [presetWind4({ dark: "class", preflights: { reset: true, theme: true } })],
+	presets: [presetWind4({ dark: "class", preflights: { reset: true, theme: true } }),],
+	variants: [
+		(matcher) => {
+			const re = /^.+-\d{1,3}d\/(\d{1,2})$/;
+			if (!re.test(matcher)) return matcher;
+			const v = matcher.match(re)?.[1];
+			return {
+				body: ([entry]) => [[entry[0], `color-mix(in lab, ${entry[1]} ${v}%, transparent)`]]
+			};
+		},
+		(matcher) => {
+			const re = /^.+-\d{1,3}d\|l(?:(-|\+))?(\d{1,2})$/;
+			if (!re.test(matcher)) return matcher;
+			const [, sign, value] = matcher.match(re) ?? [];
+			return {
+				body: ([entry]) => {
+					const lch = parseCSS(`${entry[1]}`, "oklch");
+					const k = (lch.l - 0.5) * 2;
+					const direction = sign === "+" ? 1 : -1;
+					const multiplier = 2 ** (k * direction);
+					const normalizedValue = +value * multiplier;
+					return [[entry[0], `color-mix(in oklch, ${entry[1]}, ${sign === '-' ? "#000" : "#fff"} ${normalizedValue}%)`]];
+				}
+			};
+		},
+		(matcher) => {
+			const re = /^.+-\d{1,3}d\|h(?:(-|\+))?(\d{1,3})$/;
+			if (!re.test(matcher)) return matcher;
+			const [, sign, value] = matcher.match(re) ?? [];
+			return {
+				body: ([entry]) => [[entry[0], `oklch(from ${entry[1]} l c calc(h ${sign} ${value}))`]]
+			};
+		},
+	],
 	rules: [
-		[/^bg-(.+)\/(\d+)d$/, ([_, color, alpha]) => ({ "background-color": ` oklch(from var(--colors-${color}) l c h / ${2 ** -(0.125 * +alpha)})`, }),],
-		[/^text-(.+)\/(\d+)d$/, ([_, color, alpha]) => ({ "color": ` oklch(from var(--colors-${color}) l c h / ${2 ** -(0.125 * +alpha)})`, }),],
-		[/^bg-(.+)\|(?:(-))?(\d+)l$/, ([_, color, minus, l]) => ({ "background-color": ` oklch(from var(--colors-${color}) calc(l ${minus ? '-' : '+'} ${+l / 100}) c h)`, }),],
-		[/^bg-(.+)\|(?:(-))?(\d+)c$/, ([_, color, minus, c]) => ({ "background-color": ` oklch(from var(--colors-${color}) l calc(c ${minus ? '-' : '+'} ${+c}) h)`, }),],
-		[/^shadow-(d|l)-(\d+)d$/, ([_, theme, value]) => ({ 'box-shadow': `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${2 * 2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${0.5 * 2 ** (0.25 * +value)}rem) oklch(from var(--colors-neutral-1000) l c h / ${theme === 'd' ? 0.6 : 0.3})` })],
-		[/^m(x|y|t|r|b|l|s|e)?-(\d+)d$/, ([_, side, value]) => ({ [`margin${side ? `-${{ "x": "inline", "y": "block", "t": "top", "b": "bottom", "l": "left", "r": "right", "s": "inline-start", "e": "inline-end" }[side]}` : ''}`]: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^p(x|y|t|r|b|l|s|e)?-(\d+)d$/, ([_, side, value]) => ({ [`padding${side ? `-${{ "x": "inline", "y": "block", "t": "top", "b": "bottom", "l": "left", "r": "right", "s": "inline-start", "e": "inline-end" }[side]}` : ''}`]: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^gap(?:-(x|y))?-(\d+)d$/, ([_, side, value]) => ({ [`${side ? `${{ "x": "column-", "y": "row-" }[side]}` : ''}gap`]: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^rounded(?:-(bl|br|tl|tr|es|ee|se|ss))?-(\d+)d$/, ([_, side, value]) => ({ [`${side ? { "bl": "border-bottom-left-radius", "br": "border-bottom-right-radius", "tl": "border-top-left-radius", "tr": "border-top-right-radius", "es": "border-end-start-radius", "ee": "border-end-end-radius", "se": "border-start-end-radius", "ss": "border-start-start-radius" }[side] : 'border-radius'}`]: `calc(var(--spacing-size) * var(--radius) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^rounded-(s|e|t|r|b|l)-(\d+)d$/, ([_, side, value]) => ({ [`${{ "s": ["border-start-start-radius", "border-end-start-radius"], "e": ["border-start-end-radius", "border-end-end-radius"], "t": ["border-top-left-radius", "border-top-right-radius"], "r": ["border-top-right-radius", "border-bottom-right-radius"], "b": ["border-bottom-right-radius", "border-bottom-left-radius"], "l": ["border-top-left-radius", "border-bottom-left-radius"] }[side]?.[0]}`]: `calc(var(--spacing-size) * var(--radius) * ${2 ** (0.25 * +value)}rem)`, [`${{ "s": ["border-start-start-radius", "border-end-start-radius"], "e": ["border-start-end-radius", "border-end-end-radius"], "t": ["border-top-left-radius", "border-top-right-radius"], "r": ["border-top-right-radius", "border-bottom-right-radius"], "b": ["border-bottom-right-radius", "border-bottom-left-radius"], "l": ["border-top-left-radius", "border-bottom-left-radius"] }[side]?.[1]}`]: `calc(var(--spacing-size) * var(--radius) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^top-(\d+)d$/, ([_, value]) => ({ top: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^bottom-(\d+)d$/, ([_, value]) => ({ bottom: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^left-(\d+)d$/, ([_, value]) => ({ left: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^right-(\d+)d$/, ([_, value]) => ({ right: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^w-(\d+)d$/, ([_, value]) => ({ width: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^h-(\d+)d$/, ([_, value]) => ({ height: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^min-w-(\d+)d$/, ([_, value]) => ({ 'min-width': `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^min-h-(\d+)d$/, ([_, value]) => ({ 'min-height': `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^max-w-(\d+)d$/, ([_, value]) => ({ 'max-width': `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^max-h-(\d+)d$/, ([_, value]) => ({ 'max-height': `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^size-(\d+)d$/, ([_, value]) => ({ width: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)`, height: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)` })],
-		[/^text-(\d+)d$/, ([_, value]) => ({ 'font-size': `calc(var(--spacing-size) * var(--text-size) * 8 * ${2 ** (0.25 * +value)}rem)`, 'line-height': `${+value < 6 ? 2 ** (0.0625 * (+value + 5)) : +value < 11 ? 2 ** 0.625 / 2 ** (0.125 * (+value - 5)) : 1}` })],
-		[/^font-(\d+)d$/, ([_, value]) => ({ 'font-weight': `${Math.min(1000, 100 * 2 ** (0.25 * +value))}` })],
+		[/^(bg|text|border|outline|fill)-([a-z]+)-(\d{1,4})?d.*$/, ([_, prop, color, lightness], { theme }) => {
+			const hue = `${color}-hue`;
+			if (!theme.colors?.[hue]) return;
+			const propToCss = {
+				bg: "background-color",
+				text: "color",
+				border: "border-color",
+				outline: "outline-color",
+				fill: "fill",
+			} as const;
+			const cssProp = propToCss[prop as keyof typeof propToCss];
+			return {
+				[cssProp]: computeOklch(+(lightness ?? +`${theme.colors?.[`${color}-lightness`]}` * 1000) / 1000, +(theme.colors?.[`${color}-hue`] ?? 0), +(theme.colors?.[`${color}-chroma`] ?? 0))
+			};
+		},],
+		[/^shadow-(d|l|md|ml|ad|al)(?:-([a-z]+))?-(\d+)d$/, ([_, mode, color, value], { theme }) => {
+			const hue = `${color ? color : 'background'}-hue`;
+			if (!theme.colors?.[hue]) return;
+			const chroma = +theme.colors[`${color ? color : 'background'}-chroma`] * 0.25;
+			const isDark = mode === "d" || mode === "sd";
+			const isMirrored = mode === "md" || mode === "ml";
+			const isAround = mode === "ad" || mode === "al";
+			const displacement = isMirrored ? -1 : isAround ? 0 : 1;
+			return {
+				"box-shadow": ` calc(var(--spacing-size) * ${displacement * 2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${displacement * 2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${2 * 2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${0.5 * 2 ** (0.25 * +value)}rem) oklch(${isDark ? 0 : 0.5} ${chroma} var(--colors-${hue}) / 0.5)${isAround ? `, calc(var(--spacing-size) * ${displacement * 2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${displacement * 2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${2 * 2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${0.5 * 2 ** (0.25 * +value)}rem) oklch(${isDark ? 0 : 0.5} ${chroma} var(--colors-${hue}) / 0.5)` : ''}`,
+			};
+		},],
+		[/^drop-shadow-(d|l)(?:-([a-z]+))?-(\d+)d$/, ([_, mode, color, value], { theme }) => {
+			const hue = `${color ? color : 'background'}-hue`;
+			if (!theme.colors?.[hue]) return;
+			return {
+				filter: ` drop-shadow(calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem) calc(var(--spacing-size) * ${2 ** (0.25 * +value) / 2}rem) oklch(${mode === "d" ? 0 : 0.25} 0.08 var(--colors-${hue}) / 0.5))`,
+			};
+		},],
+		[/^m(x|y|t|r|b|l|s|e)?-(\d+)d$/, ([_, side, value]) => ({
+			[`margin${side ? `-${{ x: "inline", y: "block", t: "top", b: "bottom", l: "left", r: "right", s: "inline-start", e: "inline-end" }[side]}` : ""}`]: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)`,
+		}),],
+		[/^p(x|y|t|r|b|l|s|e)?-(\d+)d$/, ([_, side, value]) => ({
+			[`padding${side ? `-${{ x: "inline", y: "block", t: "top", b: "bottom", l: "left", r: "right", s: "inline-start", e: "inline-end" }[side]}` : ""}`]: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)`,
+		}),],
+		[/^gap(?:-(x|y))?-(\d+)d$/, ([_, side, value]) => ({
+			[`${side ? `${{ x: "column-", y: "row-" }[side]}` : ""}gap`]: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)`,
+		}),],
+		[/^rounded(?:-(bl|br|tl|tr|es|ee|se|ss))?-(\d+)d$/, ([_, side, value]) => ({
+			[`${side ? { bl: "border-bottom-left-radius", br: "border-bottom-right-radius", tl: "border-top-left-radius", tr: "border-top-right-radius", es: "border-end-start-radius", ee: "border-end-end-radius", se: "border-start-end-radius", ss: "border-start-start-radius" }[side] : "border-radius"}`]: `calc(var(--spacing-size) * var(--radius) * ${2 ** (0.25 * +value)}rem)`,
+		}),],
+		[/^rounded-(s|e|t|r|b|l)-(\d+)d$/, ([_, side, value]) => ({
+			[`${{ s: ["border-start-start-radius", "border-end-start-radius"], e: ["border-start-end-radius", "border-end-end-radius"], t: ["border-top-left-radius", "border-top-right-radius"], r: ["border-top-right-radius", "border-bottom-right-radius"], b: ["border-bottom-right-radius", "border-bottom-left-radius"], l: ["border-top-left-radius", "border-bottom-left-radius"] }[side]?.[0]}`]: `calc(var(--spacing-size) * var(--radius) * ${2 ** (0.25 * +value)}rem)`,
+			[`${{ s: ["border-start-start-radius", "border-end-start-radius"], e: ["border-start-end-radius", "border-end-end-radius"], t: ["border-top-left-radius", "border-top-right-radius"], r: ["border-top-right-radius", "border-bottom-right-radius"], b: ["border-bottom-right-radius", "border-bottom-left-radius"], l: ["border-top-left-radius", "border-bottom-left-radius"] }[side]?.[1]}`]: `calc(var(--spacing-size) * var(--radius) * ${2 ** (0.25 * +value)}rem)`,
+		}),],
+		[/^(-)?(top|bottom|left|right)-(\d+)d$/, ([_, minus, side, value]) => ({
+			[side]: `calc(var(--spacing-size) * ${(minus ? -1 : 1) * 2 ** (0.25 * +value)}rem)`,
+		}),],
+		[/^(w|h|min-w|min-h|max-w|max-h)-(\d+)d$/, ([_, param, value]) => {
+			const params = { w: "width", h: "height", "min-w": "min-width", "max-w": "max-width", "min-h": "min-height", "max-h": "max-height" };
+			return {
+				[params[param as keyof typeof params]]: `calc(var(--spacing-size) * ${2 ** (0.25 * +value)}rem)`,
+			};
+		},],
+		[/^text-(\d+)d$/, ([_, value]) => ({
+			"font-size": `calc(var(--spacing-size) * var(--text-size) * 8 * ${2 ** (0.25 * +value)}rem)`,
+			"line-height": `${+value < 6 ? 2 ** (0.0625 * (+value + 5)) : +value < 11 ? 2 ** 0.625 / 2 ** (0.125 * (+value - 5)) : 1}`,
+		}),],
+		[/^font-(\d+)d$/, ([_, value]) => ({
+			"font-weight": `${Math.min(1000, 100 * 2 ** (0.25 * +value))}`,
+		}),],
+		[/^stroke-(\d+)d$/, ([_, value]) => ({
+			"stroke-width": `${2 ** (0.25 * +value)}`,
+		}),],
 	],
 	shortcuts: [
 		{
-			"surface-primary": "bg-primary-500/23d dark:bg-primary-500/14d",
-			"surface-error": "bg-error-500/23d dark:bg-error-500/14d",
-			"surface-visited": "bg-visited-500/23d dark:bg-visited-500/14d",
-			"surface-warning": "bg-warning-500/23d dark:bg-warning-500/14d",
-			"surface-success": "bg-success-500/23d dark:bg-success-500/14d",
-			"surface-neutral": "bg-neutral-500/23d dark:bg-neutral-500/14d",
-			"bg-neutral": "bg-neutral-150 dark:bg-neutral-600",
-			"bg-neutral-1": "bg-neutral-100 dark:bg-neutral-650",
-			"bg-neutral-2": "bg-neutral-50 dark:bg-neutral-700",
-			"bg-neutral-3": "bg-neutral-0 dark:bg-neutral-750",
-			"bg-neutral-fg": "bg-neutral-750 dark:bg-neutral-300",
-			"bg-neutral-1fg": "bg-neutral-800 dark:bg-neutral-250",
-			"bg-neutral-2fg": "bg-neutral-850 dark:bg-neutral-200",
-			"bg-neutral-3fg": "bg-neutral-900 dark:bg-neutral-150",
-			"text-warning": "text-warning-600 dark:text-warning-250",
-			"text-warning-interactive": "hover:text-warning-600/7d dark:hover:text-warning-250/5d active:text-warning-600/11d dark:active:text-warning-250/9d",
-			"text-visited": "text-visited-600 dark:text-visited-250",
-			"text-visited-interactive": "hover:text-visited-600/7d dark:hover:text-visited-250/5d active:text-visited-600/11d dark:active:text-visited-250/9d",
-			"text-error": "text-error-600 dark:text-error-250",
-			"text-error-interactive": "hover:text-error-600/7d dark:hover:text-error-250/5d active:text-error-600/11d dark:active:text-error-250/9d",
-			"text-success": "text-success-600 dark:text-success-250",
-			"text-success-interactive": "hover:text-success-600/7d dark:hover:text-success-250/5d active:text-success-600/11d dark:active:text-success-250/9d",
-			"text-primary": "text-primary-600 dark:text-primary-250",
-			"text-primary-interactive": "hover:text-primary-600/7d dark:hover:text-primary-250/5d active:text-primary-600/11d dark:active:text-primary-250/9d",
-			"text-neutral": "text-neutral-950 dark:text-neutral-150",
-			"text-neutral-1": "text-neutral-900 dark:text-neutral-200",
-			"text-neutral-2": "text-neutral-850 dark:text-neutral-250",
-			"text-neutral-3": "text-neutral-800 dark:text-neutral-300",
-			"text-neutral-light": "text-neutral-50 dark:text-neutral-50",
-			"text-neutral-dark": "text-neutral-850 dark:text-neutral-950",
-			"text-muted": "text-neutral-600 dark:text-neutral-250",
-			"text-muted-interactive": "hover:text-neutral-600/6d active:text-neutral-600/10d dark:hover:text-neutral-250/5d dark:active:text-neutral-250/9d",
-			"outline-neutral": "outline-neutral-600  dark:outline-neutral-300",
-			"outline-primary": "outline-primary-600  dark:outline-primary-300",
-			"shadow-lifted": "shadow-l-4d hover:shadow-l-5d active:shadow-l-1d dark:shadow-d-4d dark:hover:shadow-d-5d dark:active:shadow-d-1d",
+			"border-muted": "border-foreground-700d dark:border-foreground-450d",
+			"shadow-lifted":
+				"shadow-l-4d hover:shadow-l-5d active:shadow-l-1d dark:shadow-d-4d dark:hover:shadow-d-5d dark:active:shadow-d-1d",
 		},
-		[/^shadow-(\d+)d$/, ([_, value]) => `shadow-l-${value}d dark:shadow-d-${value}d`],
+		[/^border-([a-z]+)$/, ([_, value], { theme }) => {
+			const lightness = theme.colors?.[`${value}-lightness`];
+			if (!lightness) return;
+			const { THRESHOLD_BG_LIGHTNESS, MAX_LIGHTNESS, DARK_BG_DELTA_LIGHTNESS } = SURFACE_CONFIG;
+			const l = +lightness * 1000;
+			const isSwapped = l <= THRESHOLD_BG_LIGHTNESS;
+			const swappedLightness = MAX_LIGHTNESS * (100 - DARK_BG_DELTA_LIGHTNESS / 2) / 100;
+			return `border-${value}-d${isSwapped ? ` dark:border-${value}-${swappedLightness}d` : ''}`;
+		},],
+		[/^size-(\d+)d$/, ([_, value]) => `w-${value}d h-${value}d`,],
+		[/^shadow(?:-([a-z]+))?-(\d+)d$/, ([_, color, value], { theme }) => {
+			color = color ? color : 'background';
+			if (!theme.colors?.[`${color}-hue`]) return;
+			return `shadow-l-${color}-${value}d dark:shadow-d-${color}-${value}d`;
+		},],
+		[/^ring(?:-([a-z]+))?-(\d+)d$/, ([_, color, value], { theme }) => {
+			color = color ? color : 'background';
+			if (!theme.colors?.[`${color}-hue`]) return;
+			return `shadow-al-${color}-${value}d dark:shadow-ad-${color}-${value}d`;
+		},],
+		[/^drop-shadow(?:-([a-z]+))?-(\d+)d$/, ([_, color, value], { theme }) => {
+			color = color ? color : 'background';
+			if (!theme.colors?.[`${color}-hue`]) return;
+			return `drop-shadow-l-${color}-${value}d dark:drop-shadow-d-${value}d`;
+		},],
+		[/^bg(?:-([1-4]))?$/, ([_, l]) => {
+			const { LIGHT: light } = BG_CONTRAST_LAYER_CONFIG;
+			const { DARK: dark } = BG_CONTRAST_LAYER_CONFIG;
+			return `bg-background-${light[+(l ?? 0)]}d dark:bg-background-${dark[+(l ?? 0)]}d|h+180`;
+		},],
+		[/^text(?:-(muted))?(?:-([1-4]))?$/, ([_, muted, value]) => {
+			const { DARK, DARK_MUTED, LIGHT, LIGHT_MUTED } = FG_LAYER_CONFIG;
+			const lp = muted ? LIGHT_MUTED[+(value ?? 0)] : LIGHT[+(value ?? 0)];
+			const dp = muted ? DARK_MUTED[+(value ?? 0)] : DARK[+(value ?? 0)];
+			return `text-foreground-${lp}d dark:text-foreground-${dp}d|h+180`;
+		},],
+		[/^text-([a-z]+)(?:-(\d{1}))?(?:-(ia))?$/, ([_, color, variant, ia], { theme }) => {
+			if (!theme.colors?.[`${color}-hue`]) return;
+			const { DARK_TEXT_DELTA_LIGHTNESS, LIGHT_TEXT_DELTA_LIGHTNESS, THRESHOLD_TEXT_LIGHTNESS } = SURFACE_CONFIG;
+			const { DARK, LIGHT, CONTRAST_DELTA } = BG_CONTRAST_LAYER_CONFIG;
+
+			const nVariant = ~~variant;
+
+			const textColor = color;
+			const interactiveTextColor = ia && color;
+
+			const lightLightness = LIGHT[nVariant] - CONTRAST_DELTA;
+			const lightHoverSignDeltaLightness = lightLightness > THRESHOLD_TEXT_LIGHTNESS ? "-" : "+";
+			const lightActiveSignDeltaLightness = "-";
+			const lightInteractiveDeltaLightness = LIGHT_TEXT_DELTA_LIGHTNESS;
+
+			const darkLightness = DARK[nVariant] + CONTRAST_DELTA;
+			const darkHoverSignDeltaLightness = "+";
+			const darkActiveSignDeltaLightness = "-";
+			const darkInteractiveDeltaLightness = DARK_TEXT_DELTA_LIGHTNESS;
+
+			const rules = {
+				"text": [textColor, `-${lightLightness}d`],
+				"hover:text": [interactiveTextColor, `-${lightLightness}d`, `|l${lightHoverSignDeltaLightness}${lightInteractiveDeltaLightness}`],
+				"active:hover:text": [interactiveTextColor, `-${lightLightness}d`, `|l${lightActiveSignDeltaLightness}${lightInteractiveDeltaLightness}`],
+				"active:text": [interactiveTextColor, `-${lightLightness}d`, `|l${lightActiveSignDeltaLightness}${lightInteractiveDeltaLightness}`],
+				"dark:text": [textColor, `-${darkLightness}d`],
+				"dark:hover:text": [interactiveTextColor, `-${darkLightness}d`, `|l${darkHoverSignDeltaLightness}${darkInteractiveDeltaLightness}`],
+				"dark:active:text": [interactiveTextColor, `-${darkLightness}d`, `|l${darkActiveSignDeltaLightness}${darkInteractiveDeltaLightness}`],
+				"dark:active:hover:text": [interactiveTextColor, `-${darkLightness}d`, `|l${darkActiveSignDeltaLightness}${darkInteractiveDeltaLightness}`],
+			};
+
+			return Object.entries(rules).filter(([_, v]) => !!v[0]).map(([k, v]) => `${k}-${v.filter(Boolean).join("")}`).join(" ");
+		},],
+		[/^surface-([a-z]+)-solid(?:-(\d{1}))?(?:-(ia))?$/, ([_, color, variant, ia], { theme }) => {
+			if (!theme.colors?.[`${color}-hue`]) return;
+			const { BG_DELTA_LIGHTNESS_K, DARK_BG_DELTA_LIGHTNESS, LIGHT_BG_DELTA_LIGHTNESS, MAX_LIGHTNESS, MAX_RANGE_LIGHTNESS, MIN_RANGE_LIGHTNESS, THRESHOLD_BG_LIGHTNESS, THRESHOLD_TEXT_LIGHTNESS } = SURFACE_CONFIG;
+
+			const lightBgLightness = Math.max(+theme.colors?.[`${color}-lightness`] * MAX_LIGHTNESS, MAX_LIGHTNESS * LIGHT_BG_DELTA_LIGHTNESS / 100);
+			const isTextLightnessSwapped = lightBgLightness < THRESHOLD_TEXT_LIGHTNESS;
+			const lightTextLightness = isTextLightnessSwapped ? MAX_RANGE_LIGHTNESS : MIN_RANGE_LIGHTNESS;
+			const lightHoverSignBgDeltaLightness = lightBgLightness < THRESHOLD_TEXT_LIGHTNESS || variant === "1" ? "+" : "-";
+			const lightActiveSignBgDeltaLightness = variant === "1" ? "-" : lightHoverSignBgDeltaLightness;
+			const lightHoverBgDeltaLightness = LIGHT_BG_DELTA_LIGHTNESS;
+			const lightActiveBgDeltaLightness = Math.round(LIGHT_BG_DELTA_LIGHTNESS * (variant === "1" ? 1 : BG_DELTA_LIGHTNESS_K));
+			const lightBgColor = color;
+			const lightInteractiveBgColor = ia && lightBgColor;
+			const lightTextColor = "foreground";
+
+			const darkBgLightness = lightBgLightness <= THRESHOLD_BG_LIGHTNESS ? MAX_LIGHTNESS * (100 - DARK_BG_DELTA_LIGHTNESS / 2) / 100 : lightBgLightness;
+			const darkTextLightness = isTextLightnessSwapped && MIN_RANGE_LIGHTNESS;
+			const darkHoverSignBgDeltaLightness = lightBgLightness > THRESHOLD_TEXT_LIGHTNESS || variant === "1" ? "+" : "-";
+			const darkActiveSignBgDeltaLightness = variant === "1" ? "-" : darkHoverSignBgDeltaLightness;
+			const darkHoverBgDeltaLightness = DARK_BG_DELTA_LIGHTNESS;
+			const darkActiveBgDeltaLightness = Math.round(DARK_BG_DELTA_LIGHTNESS * (BG_DELTA_LIGHTNESS_K * (variant === "1" ? 0.5 : 1)));
+			const darkBgColor = color === "foreground" && color;
+			const darkInteractiveBgColor = ia && darkBgColor;
+			const darkTextColor = color === "foreground" && "foreground";
+
+			const rules = {
+				"bg": [lightBgColor, `-${lightBgLightness}d`],
+				"hover:bg": [lightInteractiveBgColor, `-${lightBgLightness}d`, `|l${lightHoverSignBgDeltaLightness}${lightHoverBgDeltaLightness}`],
+				"active:bg": [lightInteractiveBgColor, `-${lightBgLightness}d`, `|l${lightActiveSignBgDeltaLightness}${lightActiveBgDeltaLightness}`],
+				"text": [lightTextColor, `-${lightTextLightness}d`],
+				"dark:bg": [darkBgColor, `-${darkBgLightness}d`],
+				"dark:hover:bg": [darkInteractiveBgColor, `-${darkBgLightness}d`, `|l${darkHoverSignBgDeltaLightness}${darkHoverBgDeltaLightness}`],
+				"dark:active:bg": [darkInteractiveBgColor, `-${darkBgLightness}d`, `|l${darkActiveSignBgDeltaLightness}${darkActiveBgDeltaLightness}`],
+				"dark:text": [darkTextColor, `-${darkTextLightness}d`],
+			};
+
+			return Object.entries(rules).filter(([_, v]) => !!v[0]).map(([k, v]) => `${k}-${v.filter(Boolean).join("")}`).join(" ");
+		},],
+		[/^surface-([a-z]+)-subtle(?:-(\d{1}))?(?:-(ia))?$/, ([_, color, variant, ia], { theme }) => {
+			if (!theme.colors?.[`${color}-hue`]) return;
+			const { ACTIVE_TRANSPARENCY_K, DARK_BG_DELTA_LIGHTNESS, HOVER_TRANSPARENCY_K, LIGHT_BG_DELTA_LIGHTNESS, MAX_DARK_TEXT_LIGHTNESS, MAX_DARK_TRANSPARENCY, MAX_LIGHTNESS, MAX_LIGHT_TRANSPARENCY, MIN_DARK_TRANSPARENCY, MIN_LIGHT_TEXT_LIGHTNESS, MIN_LIGHT_TRANSPARENCY, THRESHOLD_BG_LIGHTNESS } = SURFACE_CONFIG;
+
+			const interactiveBgColor = ia && color;
+
+			const lightBgLightness = Math.max(+theme.colors?.[`${color}-lightness`] * MAX_LIGHTNESS, MAX_LIGHTNESS * LIGHT_BG_DELTA_LIGHTNESS / 100);
+			const lightBgTransparency = Math.round(MIN_LIGHT_TRANSPARENCY + lightBgLightness * MAX_LIGHT_TRANSPARENCY / MAX_LIGHTNESS);
+			const lightColorTextLightness = Math.min(MIN_LIGHT_TEXT_LIGHTNESS, lightBgLightness);
+			const lightHoverBgTransparency = Math.round(lightBgTransparency * (variant === "1" ? 1 / HOVER_TRANSPARENCY_K : HOVER_TRANSPARENCY_K));
+			const lightActiveBgTransparency = Math.round(lightBgTransparency * (variant === "1" ? HOVER_TRANSPARENCY_K : ACTIVE_TRANSPARENCY_K));
+
+			const darkBgLightness = lightBgLightness <= THRESHOLD_BG_LIGHTNESS ? MAX_LIGHTNESS * (100 - DARK_BG_DELTA_LIGHTNESS) / 100 : lightBgLightness;
+			const darkBgTransparency = Math.round(MAX_DARK_TRANSPARENCY - darkBgLightness * MIN_DARK_TRANSPARENCY / MAX_LIGHTNESS);
+			const darkTextLightness = Math.max(MAX_DARK_TEXT_LIGHTNESS, darkBgLightness || 0);
+			const darkHoverBgTransparency = Math.round(darkBgTransparency * HOVER_TRANSPARENCY_K);
+			const darkActiveBgTransparency = Math.round(darkBgTransparency * (variant === "1" ? 0.5 : ACTIVE_TRANSPARENCY_K));
+
+			const rules = {
+				"bg": [color, `-${lightBgLightness}d`, `/${lightBgTransparency}`],
+				"hover:bg": [interactiveBgColor, `-${lightBgLightness}d`, `/${lightHoverBgTransparency}`],
+				"active:bg": [interactiveBgColor, `-${lightBgLightness}d`, `/${lightActiveBgTransparency}`],
+				"text": [color, `-${lightColorTextLightness}d`],
+				"dark:bg": [color, `-${darkBgLightness}d`, `/${darkBgTransparency}`],
+				"dark:hover:bg": [interactiveBgColor, `-${darkBgLightness}d`, `/${darkHoverBgTransparency}`],
+				"dark:active:bg": [interactiveBgColor, `-${darkBgLightness}d`, `/${darkActiveBgTransparency}`],
+				"dark:text": [color, `-${darkTextLightness}d`],
+			};
+
+			return Object.entries(rules).filter(([_, v]) => !!v[0]).map(([k, v]) => `${k}-${v.filter(Boolean).join("")}`).join(" ");
+		},],
+		[/^surface-([a-z]+)-outline(?:-(\d{1}))?(?:-(ia))?$/, ([_, color, variant, ia], { theme }) => {
+			if (!theme.colors?.[`${color}-hue`]) return;
+			const { DARK_BG_DELTA_LIGHTNESS, HOVER_TRANSPARENCY_K, LIGHT_BG_DELTA_LIGHTNESS, MAX_DARK_TEXT_LIGHTNESS, MAX_DARK_TRANSPARENCY, MAX_LIGHTNESS, MAX_LIGHT_TRANSPARENCY, MIN_RANGE_LIGHTNESS, MIN_DARK_TRANSPARENCY, MIN_LIGHT_TEXT_LIGHTNESS, MIN_LIGHT_TRANSPARENCY, MUTED_BORDER_TRANSPARENCY, THRESHOLD_BG_LIGHTNESS, MAX_RANGE_LIGHTNESS } = SURFACE_CONFIG;
+
+			const interactiveBgColor = ia && color;
+			const pressedBgColor = variant === "2" && interactiveBgColor;
+			const borderTransparency = MUTED_BORDER_TRANSPARENCY * (variant === "1" ? 0.5 : 1);
+
+			const lightBorderLightness = Math.max(+theme.colors?.[`${color}-lightness`] * MAX_LIGHTNESS, MAX_LIGHTNESS * LIGHT_BG_DELTA_LIGHTNESS / 100);
+			const lightInteractiveBgLightness = Math.max(lightBorderLightness, variant === "1" ? MAX_RANGE_LIGHTNESS : 0);
+			const lightActiveBgLightness = Math.round(lightInteractiveBgLightness * (variant === "1" ? 0.9 : 1));
+			const lightTextLightness = Math.min(MIN_LIGHT_TEXT_LIGHTNESS, lightInteractiveBgLightness);
+			const lightBaseBgTransparency = Math.round((MIN_LIGHT_TRANSPARENCY + lightInteractiveBgLightness * MAX_LIGHT_TRANSPARENCY / MAX_LIGHTNESS) * (variant === "1" ? 2 : 1));
+			const lightHoverBgTransparency = variant === "2" ? 0 : lightBaseBgTransparency;
+			const lightActiveBgTransparency = Math.round(lightBaseBgTransparency * (variant === "2" ? 1 : HOVER_TRANSPARENCY_K));
+			const lightPressedBgTransparency = Math.round(lightBaseBgTransparency * HOVER_TRANSPARENCY_K);
+
+			const darkBorderLightness = lightBorderLightness <= THRESHOLD_BG_LIGHTNESS ? MAX_LIGHTNESS * (100 - DARK_BG_DELTA_LIGHTNESS) / 100 : lightBorderLightness;
+			const darkInteractiveBgLightness = Math.max(darkBorderLightness, !!variant ? MIN_RANGE_LIGHTNESS : 0);
+			const darkBgLightness = darkInteractiveBgLightness <= THRESHOLD_BG_LIGHTNESS ? MAX_LIGHTNESS * (100 - DARK_BG_DELTA_LIGHTNESS) / 100 : darkInteractiveBgLightness;
+			const darkTextLightness = Math.max(MAX_DARK_TEXT_LIGHTNESS, darkBgLightness || 0);
+			const darkBaseBgTransparency = Math.round(MAX_DARK_TRANSPARENCY - darkBgLightness * MIN_DARK_TRANSPARENCY / MAX_LIGHTNESS);
+			const darkHoverBgTransparency = variant === "2" ? 0 : darkBaseBgTransparency;
+			const darkActiveBgTransparency = Math.round(darkBaseBgTransparency * (variant === "1" ? 1 / HOVER_TRANSPARENCY_K : variant === "2" ? 1 : HOVER_TRANSPARENCY_K));
+			const darkPressedBgTransparency = Math.round(darkBaseBgTransparency * HOVER_TRANSPARENCY_K);
+
+			const rules = {
+				"hover:bg": [interactiveBgColor, `-${lightInteractiveBgLightness}d`, `/${lightHoverBgTransparency}`],
+				"hover:data-[pressed]:bg": [pressedBgColor, `-${lightInteractiveBgLightness}d`, `/${lightPressedBgTransparency}`],
+				"active:bg": [interactiveBgColor, `-${lightActiveBgLightness}d`, `/${lightActiveBgTransparency}`],
+				"active:data-[pressed]:bg": [interactiveBgColor, `-${lightInteractiveBgLightness}d`, `/${lightActiveBgTransparency}`],
+				"data-[pressed]:bg": [pressedBgColor, `-${lightInteractiveBgLightness}d`, `/${lightPressedBgTransparency}`],
+				"text": [color, `-${lightTextLightness}d`],
+				"border": [color, `-${lightBorderLightness}d`, `/${borderTransparency}`],
+				"dark:hover:bg": [interactiveBgColor, `-${darkInteractiveBgLightness}d`, `/${darkHoverBgTransparency}`],
+				"dark:hover:data-[pressed]:bg": [pressedBgColor, `-${darkInteractiveBgLightness}d`, `/${darkPressedBgTransparency}`],
+				"dark:active:bg": [interactiveBgColor, `-${darkInteractiveBgLightness}d`, `/${darkActiveBgTransparency}`],
+				"dark:active:data-[pressed]:bg": [interactiveBgColor, `-${darkInteractiveBgLightness}d`, `/${darkActiveBgTransparency}`],
+				"dark:data-[pressed]:bg": [pressedBgColor, `-${darkInteractiveBgLightness}d`, `/${darkPressedBgTransparency}`],
+				"dark:text": [color, `-${darkTextLightness}d`],
+				"dark:border": [color, `-${darkBgLightness}d`, `/${borderTransparency}`],
+			};
+
+			return Object.entries(rules).filter(([_, v]) => !!v[0]).map(([k, v]) => `${k}-${v.filter(Boolean).join("")}`).join(" ");
+		},],
+		[/^surface-([a-z]+)-ghost(?:-(\d{1}))?(?:-(ia))?$/, ([_, color, variant, ia], { theme }) => {
+			if (!theme.colors?.[`${color}-hue`]) return;
+			const { DARK_BG_DELTA_LIGHTNESS, HOVER_TRANSPARENCY_K, LIGHT_BG_DELTA_LIGHTNESS, MAX_DARK_TEXT_LIGHTNESS, MAX_DARK_TRANSPARENCY, MAX_LIGHTNESS, MAX_LIGHT_TRANSPARENCY, MIN_RANGE_LIGHTNESS, MIN_DARK_TRANSPARENCY, MIN_LIGHT_TEXT_LIGHTNESS, MIN_LIGHT_TRANSPARENCY, THRESHOLD_BG_LIGHTNESS, MAX_RANGE_LIGHTNESS } = SURFACE_CONFIG;
+
+			const interactiveBgColor = ia && color;
+			const pressedBgColor = variant === "2" && interactiveBgColor;
+
+			const lightBorderLightness = Math.max(+theme.colors?.[`${color}-lightness`] * MAX_LIGHTNESS, MAX_LIGHTNESS * LIGHT_BG_DELTA_LIGHTNESS / 100);
+			const lightInteractiveBgLightness = Math.max(lightBorderLightness, variant === "1" ? MAX_RANGE_LIGHTNESS : 0);
+			const lightActiveBgLightness = Math.round(lightInteractiveBgLightness * (variant === "1" ? 0.9 : 1));
+			const lightTextLightness = Math.min(MIN_LIGHT_TEXT_LIGHTNESS, lightInteractiveBgLightness);
+			const lightBaseBgTransparency = Math.round((MIN_LIGHT_TRANSPARENCY + lightInteractiveBgLightness * MAX_LIGHT_TRANSPARENCY / MAX_LIGHTNESS) * (variant === "1" ? 2 : 1));
+			const lightHoverBgTransparency = variant === "2" ? 0 : lightBaseBgTransparency;
+			const lightActiveBgTransparency = Math.round(lightBaseBgTransparency * (variant === "2" ? 1 : HOVER_TRANSPARENCY_K));
+			const lightPressedBgTransparency = Math.round(lightBaseBgTransparency * HOVER_TRANSPARENCY_K);
+
+			const darkBorderLightness = lightBorderLightness <= THRESHOLD_BG_LIGHTNESS ? MAX_LIGHTNESS * (100 - DARK_BG_DELTA_LIGHTNESS) / 100 : lightBorderLightness;
+			const darkInteractiveBgLightness = Math.max(darkBorderLightness, variant === "1" ? MIN_RANGE_LIGHTNESS : 0);
+			const darkBgLightness = darkInteractiveBgLightness <= THRESHOLD_BG_LIGHTNESS ? MAX_LIGHTNESS * (100 - DARK_BG_DELTA_LIGHTNESS) / 100 : darkInteractiveBgLightness;
+			const darkTextLightness = Math.max(MAX_DARK_TEXT_LIGHTNESS, darkBgLightness || 0);
+			const darkBaseBgTransparency = Math.round(MAX_DARK_TRANSPARENCY - darkBgLightness * MIN_DARK_TRANSPARENCY / MAX_LIGHTNESS);
+			const darkHoverBgTransparency = variant === "2" ? 0 : darkBaseBgTransparency;
+			const darkActiveBgTransparency = Math.round(darkBaseBgTransparency * (variant === "1" ? 1 / HOVER_TRANSPARENCY_K : variant === "2" ? 1 : HOVER_TRANSPARENCY_K));
+			const darkPressedBgTransparency = Math.round(darkBaseBgTransparency * HOVER_TRANSPARENCY_K);
+
+			const rules = {
+				"hover:bg": [interactiveBgColor, `-${lightInteractiveBgLightness}d`, `/${lightHoverBgTransparency}`],
+				"hover:data-[pressed]:bg": [pressedBgColor, `-${lightInteractiveBgLightness}d`, `/${lightPressedBgTransparency}`],
+				"active:bg": [interactiveBgColor, `-${lightActiveBgLightness}d`, `/${lightActiveBgTransparency}`],
+				"active:data-[pressed]:bg": [interactiveBgColor, `-${lightInteractiveBgLightness}d`, `/${lightActiveBgTransparency}`],
+				"data-[pressed]:bg": [pressedBgColor, `-${lightInteractiveBgLightness}d`, `/${lightPressedBgTransparency}`],
+				"text": [color, `-${lightTextLightness}d`],
+				"dark:hover:bg": [interactiveBgColor, `-${darkInteractiveBgLightness}d`, `/${darkHoverBgTransparency}`],
+				"dark:hover:data-[pressed]:bg": [pressedBgColor, `-${darkInteractiveBgLightness}d`, `/${darkPressedBgTransparency}`],
+				"dark:active:bg": [interactiveBgColor, `-${darkInteractiveBgLightness}d`, `/${darkActiveBgTransparency}`],
+				"dark:active:data-[pressed]:bg": [interactiveBgColor, `-${darkInteractiveBgLightness}d`, `/${darkActiveBgTransparency}`],
+				"dark:data-[pressed]:bg": [pressedBgColor, `-${darkInteractiveBgLightness}d`, `/${darkPressedBgTransparency}`],
+				"dark:text": [color, `-${darkTextLightness}d`],
+			};
+			return Object.entries(rules).filter(([_, v]) => !!v[0]).map(([k, v]) => `${k}-${v.filter(Boolean).join("")}`).join(" ");
+		},],
 	],
 	extendTheme: (theme) => ({
 		...theme,
 		colors: {
-			"neutral-0": "oklch(1 0 142)",
-			"neutral-50": "oklch(0.98 0.004 142.1)",
-			"neutral-100": "oklch(0.947 0.005 142.26)",
-			"neutral-150": "oklch(0.907 0.006 142.47)",
-			"neutral-200": "oklch(0.861 0.007 142.7)",
-			"neutral-250": "oklch(0.81 0.007 142.95)",
-			"neutral-300": "oklch(0.755 0.007 143.23)",
-			"neutral-350": "oklch(0.696 0.006 143.52)",
-			"neutral-400": "oklch(0.634 0.006 143.83)",
-			"neutral-450": "oklch(0.568 0.006 144.16)",
-			"neutral-500": "oklch(0.5 0.006 144.5)",
-			"neutral-550": "oklch(0.432 0.006 144.84)",
-			"neutral-600": "oklch(0.366 0.005 145.17)",
-			"neutral-650": "oklch(0.304 0.005 145.48)",
-			"neutral-700": "oklch(0.245 0.005 145.77)",
-			"neutral-750": "oklch(0.19 0.005 146.05)",
-			"neutral-800": "oklch(0.139 0.004 146.31)",
-			"neutral-850": "oklch(0.093 0.004 146.53)",
-			"neutral-900": "oklch(0.053 0.003 146.74)",
-			"neutral-950": "oklch(0.02 0.002 146.9)",
-			"neutral-1000": "oklch(0 0 147)",
-			"success-50": "oklch(0.98 0.035 141.39)",
-			"success-100": "oklch(0.947 0.098 140.39)",
-			"success-150": "oklch(0.907 0.188 139.17)",
-			"success-200": "oklch(0.861 0.289 137.77)",
-			"success-250": "oklch(0.81 0.272 136.21)",
-			"success-300": "oklch(0.755 0.253 134.54)",
-			"success-350": "oklch(0.696 0.234 132.74)",
-			"success-400": "oklch(0.634 0.213 130.85)",
-			"success-450": "oklch(0.568 0.191 128.84)",
-			"success-500": "oklch(0.5 0.168 126.77)",
-			"success-550": "oklch(0.432 0.145 124.7)",
-			"success-600": "oklch(0.366 0.123 122.69)",
-			"success-650": "oklch(0.304 0.102 120.8)",
-			"success-700": "oklch(0.245 0.082 119)",
-			"success-750": "oklch(0.19 0.063 117.32)",
-			"success-800": "oklch(0.139 0.046 115.77)",
-			"success-850": "oklch(0.093 0.031 114.37)",
-			"success-900": "oklch(0.053 0.017 113.15)",
-			"success-950": "oklch(0.02 0.006 112.14)",
-			"warning-50": "oklch(0.98 0.097 109.02)",
-			"warning-100": "oklch(0.947 0.206 107.39)",
-			"warning-150": "oklch(0.907 0.198 105.43)",
-			"warning-200": "oklch(0.861 0.187 103.17)",
-			"warning-250": "oklch(0.81 0.176 100.66)",
-			"warning-300": "oklch(0.755 0.164 97.95)",
-			"warning-350": "oklch(0.696 0.151 95.05)",
-			"warning-400": "oklch(0.634 0.138 92.01)",
-			"warning-450": "oklch(0.568 0.123 88.76)",
-			"warning-500": "oklch(0.5 0.109 85.42)",
-			"warning-550": "oklch(0.432 0.094 82.07)",
-			"warning-600": "oklch(0.366 0.079 78.83)",
-			"warning-650": "oklch(0.304 0.066 75.78)",
-			"warning-700": "oklch(0.245 0.053 72.88)",
-			"warning-750": "oklch(0.19 0.041 70.18)",
-			"warning-800": "oklch(0.139 0.03 67.67)",
-			"warning-850": "oklch(0.093 0.02 65.41)",
-			"warning-900": "oklch(0.053 0.011 63.44)",
-			"warning-950": "oklch(0.02 0.004 61.82)",
-			"error-50": "oklch(0.98 0.009 28.93)",
-			"error-100": "oklch(0.947 0.026 28.82)",
-			"error-150": "oklch(0.907 0.048 28.68)",
-			"error-200": "oklch(0.861 0.075 28.52)",
-			"error-250": "oklch(0.81 0.107 28.34)",
-			"error-300": "oklch(0.755 0.147 28.15)",
-			"error-350": "oklch(0.696 0.194 27.94)",
-			"error-400": "oklch(0.634 0.251 27.73)",
-			"error-450": "oklch(0.568 0.232 27.5)",
-			"error-500": "oklch(0.5 0.205 27.26)",
-			"error-550": "oklch(0.432 0.177 27.02)",
-			"error-600": "oklch(0.366 0.15 26.79)",
-			"error-650": "oklch(0.304 0.124 26.58)",
-			"error-700": "oklch(0.245 0.1 26.37)",
-			"error-750": "oklch(0.19 0.077 26.18)",
-			"error-800": "oklch(0.139 0.056 26)",
-			"error-850": "oklch(0.093 0.038 25.84)",
-			"error-900": "oklch(0.053 0.021 25.7)",
-			"error-950": "oklch(0.02 0.008 25.59)",
-			"visited-50": "oklch(0.98 0.016 327.98)",
-			"visited-100": "oklch(0.947 0.045 327.94)",
-			"visited-150": "oklch(0.907 0.082 327.9)",
-			"visited-200": "oklch(0.861 0.127 327.85)",
-			"visited-250": "oklch(0.81 0.184 327.8)",
-			"visited-300": "oklch(0.755 0.251 327.74)",
-			"visited-350": "oklch(0.696 0.32 327.67)",
-			"visited-400": "oklch(0.634 0.291 327.61)",
-			"visited-450": "oklch(0.568 0.261 327.54)",
-			"visited-500": "oklch(0.5 0.23 327.46)",
-			"visited-550": "oklch(0.432 0.198 327.39)",
-			"visited-600": "oklch(0.366 0.168 327.32)",
-			"visited-650": "oklch(0.304 0.139 327.25)",
-			"visited-700": "oklch(0.245 0.112 327.19)",
-			"visited-750": "oklch(0.19 0.087 327.13)",
-			"visited-800": "oklch(0.139 0.064 327.07)",
-			"visited-850": "oklch(0.093 0.042 327.02)",
-			"visited-900": "oklch(0.053 0.024 326.98)",
-			"visited-950": "oklch(0.02 0.009 326.95)",
-			"primary-50": "oklch(0.98 0.009 263.99)",
-			"primary-100": "oklch(0.947 0.025 263.97)",
-			"primary-150": "oklch(0.907 0.044 263.94)",
-			"primary-200": "oklch(0.861 0.068 263.91)",
-			"primary-250": "oklch(0.81 0.094 263.88)",
-			"primary-300": "oklch(0.755 0.124 263.85)",
-			"primary-350": "oklch(0.696 0.158 263.81)",
-			"primary-400": "oklch(0.634 0.195 263.78)",
-			"primary-450": "oklch(0.568 0.236 263.74)",
-			"primary-500": "oklch(0.5 0.281 263.69)",
-			"primary-550": "oklch(0.432 0.25 263.65)",
-			"primary-600": "oklch(0.366 0.212 263.61)",
-			"primary-650": "oklch(0.304 0.176 263.57)",
-			"primary-700": "oklch(0.245 0.142 263.54)",
-			"primary-750": "oklch(0.19 0.11 263.5)",
-			"primary-800": "oklch(0.139 0.08 263.47)",
-			"primary-850": "oklch(0.093 0.053 263.44)",
-			"primary-900": "oklch(0.053 0.03 263.42)",
-			"primary-950": "oklch(0.02 0.011 263.4)",
-			"primary-50n": "oklch(0.98 0.009 263.99)",
-			"primary-100n": "oklch(0.947 0.025 263.97)",
-			"primary-150n": "oklch(0.907 0.044 263.94)",
-			"primary-200n": "oklch(0.861 0.068 263.91)",
-			"primary-250n": "oklch(0.81 0.094 263.88)",
-			"primary-300n": "oklch(0.755 0.124 263.85)",
-			"primary-350n": "oklch(0.696 0.151 263.81)",
-			"primary-400n": "oklch(0.634 0.138 263.78)",
-			"primary-450n": "oklch(0.568 0.123 263.74)",
-			"primary-500n": "oklch(0.5 0.109 263.69)",
-			"primary-550n": "oklch(0.432 0.094 263.65)",
-			"primary-600n": "oklch(0.366 0.079 263.61)",
-			"primary-650n": "oklch(0.304 0.066 263.57)",
-			"primary-700n": "oklch(0.245 0.053 263.54)",
-			"primary-750n": "oklch(0.19 0.041 263.5)",
-			"primary-800n": "oklch(0.139 0.03 263.47)",
-			"primary-850n": "oklch(0.093 0.02 263.44)",
-			"primary-900n": "oklch(0.053 0.011 263.42)",
-			"primary-950n": "oklch(0.02 0.004 263.4)",
-			"success-50n": "oklch(0.98 0.009 141.39)",
-			"success-100n": "oklch(0.947 0.025 140.39)",
-			"success-150n": "oklch(0.907 0.044 139.17)",
-			"success-200n": "oklch(0.861 0.068 137.77)",
-			"success-250n": "oklch(0.81 0.094 136.21)",
-			"success-300n": "oklch(0.755 0.124 134.54)",
-			"success-350n": "oklch(0.696 0.151 132.74)",
-			"success-400n": "oklch(0.634 0.138 130.85)",
-			"success-450n": "oklch(0.568 0.123 128.84)",
-			"success-500n": "oklch(0.5 0.109 126.77)",
-			"success-550n": "oklch(0.432 0.094 124.7)",
-			"success-600n": "oklch(0.366 0.079 122.69)",
-			"success-650n": "oklch(0.304 0.066 120.8)",
-			"success-700n": "oklch(0.245 0.053 119)",
-			"success-750n": "oklch(0.19 0.041 117.32)",
-			"success-800n": "oklch(0.139 0.03 115.77)",
-			"success-850n": "oklch(0.093 0.02 114.37)",
-			"success-900n": "oklch(0.053 0.011 113.15)",
-			"success-950n": "oklch(0.02 0.004 112.14)",
-			"warning-50n": "oklch(0.98 0.009 109.02)",
-			"warning-100n": "oklch(0.947 0.025 107.39)",
-			"warning-150n": "oklch(0.907 0.044 105.43)",
-			"warning-200n": "oklch(0.861 0.068 103.17)",
-			"warning-250n": "oklch(0.81 0.094 100.66)",
-			"warning-300n": "oklch(0.755 0.124 97.95)",
-			"warning-350n": "oklch(0.696 0.151 95.05)",
-			"warning-400n": "oklch(0.634 0.138 92.01)",
-			"warning-450n": "oklch(0.568 0.123 88.76)",
-			"warning-500n": "oklch(0.5 0.109 85.42)",
-			"warning-550n": "oklch(0.432 0.094 82.07)",
-			"warning-600n": "oklch(0.366 0.079 78.83)",
-			"warning-650n": "oklch(0.304 0.066 75.78)",
-			"warning-700n": "oklch(0.245 0.053 72.88)",
-			"warning-750n": "oklch(0.19 0.041 70.18)",
-			"warning-800n": "oklch(0.139 0.03 67.67)",
-			"warning-850n": "oklch(0.093 0.02 65.41)",
-			"warning-900n": "oklch(0.053 0.011 63.44)",
-			"warning-950n": "oklch(0.02 0.004 61.82)",
-			"error-50n": "oklch(0.98 0.009 28.93)",
-			"error-100n": "oklch(0.947 0.025 28.82)",
-			"error-150n": "oklch(0.907 0.044 28.68)",
-			"error-200n": "oklch(0.861 0.068 28.52)",
-			"error-250n": "oklch(0.81 0.094 28.34)",
-			"error-300n": "oklch(0.755 0.124 28.15)",
-			"error-350n": "oklch(0.696 0.151 27.94)",
-			"error-400n": "oklch(0.634 0.138 27.73)",
-			"error-450n": "oklch(0.568 0.123 27.5)",
-			"error-500n": "oklch(0.5 0.109 27.26)",
-			"error-550n": "oklch(0.432 0.094 27.02)",
-			"error-600n": "oklch(0.366 0.079 26.79)",
-			"error-650n": "oklch(0.304 0.066 26.58)",
-			"error-700n": "oklch(0.245 0.053 26.37)",
-			"error-750n": "oklch(0.19 0.041 26.18)",
-			"error-800n": "oklch(0.139 0.03 26)",
-			"error-850n": "oklch(0.093 0.02 25.84)",
-			"error-900n": "oklch(0.053 0.011 25.7)",
-			"error-950n": "oklch(0.02 0.004 25.59)",
-			"visited-50n": "oklch(0.98 0.009 327.98)",
-			"visited-100n": "oklch(0.947 0.025 327.94)",
-			"visited-150n": "oklch(0.907 0.044 327.9)",
-			"visited-200n": "oklch(0.861 0.068 327.85)",
-			"visited-250n": "oklch(0.81 0.094 327.8)",
-			"visited-300n": "oklch(0.755 0.124 327.74)",
-			"visited-350n": "oklch(0.696 0.151 327.67)",
-			"visited-400n": "oklch(0.634 0.138 327.61)",
-			"visited-450n": "oklch(0.568 0.123 327.54)",
-			"visited-500n": "oklch(0.5 0.109 327.46)",
-			"visited-550n": "oklch(0.432 0.094 327.39)",
-			"visited-600n": "oklch(0.366 0.079 327.32)",
-			"visited-650n": "oklch(0.304 0.066 327.25)",
-			"visited-700n": "oklch(0.245 0.053 327.19)",
-			"visited-750n": "oklch(0.19 0.041 327.13)",
-			"visited-800n": "oklch(0.139 0.03 327.07)",
-			"visited-850n": "oklch(0.093 0.02 327.02)",
-			"visited-900n": "oklch(0.053 0.011 326.98)",
-			"visited-950n": "oklch(0.02 0.004 326.95)",
+			"primary-hue": "264",
+			"primary-chroma": "1",
+			"primary-lightness": "0.5",
+			"secondary-hue": "264",
+			"secondary-chroma": "0.05",
+			"secondary-lightness": "0.5",
+			"success-hue": "142",
+			"success-chroma": "1",
+			"success-lightness": "0.7",
+			"error-hue": "29",
+			"error-chroma": "1",
+			"error-lightness": "0.55",
+			"warning-hue": "110",
+			"warning-chroma": "1",
+			"warning-lightness": "0.8",
+			"visited-hue": "328",
+			"visited-chroma": "1",
+			"visited-lightness": "0.525",
+			"background-hue": "90",
+			"background-chroma": "0.05",
+			"background-lightness": "1",
+			"foreground-hue": "270",
+			"foreground-chroma": "0.05",
+			"foreground-lightness": "0",
 		},
 		animation: {
 			...theme.animation,
 			keyframes: {
 				...theme.animation?.keyframes,
-				"wave-primary": "{0% {outline-width: 0; outline-color: oklch(from var(--colors-primary-500) l c h / 0.8)} 100% {outline-width: 6px; outline-color: oklch(from var(--colors-primary-500) l c h / 0)} }",
-				"wave-neutral": "{0% {outline-width: 0; outline-color: oklch(from var(--colors-neutral-500) l c h / 0.8)} 100% {outline-width: 6px; outline-color: oklch(from var(--colors-neutral-500) l c h / 0)} }",
-				"wave-visited": "{0% {outline-width: 0; outline-color: oklch(from var(--colors-visited-500) l c h / 0.8)} 100% {outline-width: 6px; outline-color: oklch(from var(--colors-visited-500) l c h / 0)} }",
-				"wave-success": "{0% {outline-width: 0; outline-color: oklch(from var(--colors-success-500) l c h / 0.8)} 100% {outline-width: 6px; outline-color: oklch(from var(--colors-success-500) l c h / 0)} }",
-				"wave-warning": "{0% {outline-width: 0; outline-color: oklch(from var(--colors-warning-500) l c h / 0.8)} 100% {outline-width: 6px; outline-color: oklch(from var(--colors-warning-500) l c h / 0)} }",
-				"wave-error": "{0% {outline-width: 0; outline-color: oklch(from var(--colors-error-500) l c h / 0.8)} 100% {outline-width: 6px; outline-color: oklch(from var(--colors-error-500) l c h / 0)} }",
+				"wave-primary": "{0% {outline-width: 0; outline-color: oklch(50% 0.2999 264 / 80%)} 100% {outline-width: 6px; outline-color: oklch(50% 0.2999 264 / 0%)} }",
+				"wave-secondary": "{0% {outline-width: 0; outline-color: oklch(50% 0.015 264 / 80%)} 100% {outline-width: 6px; outline-color: oklch(50% 0.015 264 / 0%)} }",
+				"wave-success": "{0% {outline-width: 0; outline-color: oklch(50% 0.1981 142 / 80%)} 100% {outline-width: 6px; outline-color: oklch(50% 0.1981 142 / 0%)} }",
+				"wave-error": "{0% {outline-width: 0; outline-color: oklch(50% 0.2306 29 / 80%)} 100% {outline-width: 6px; outline-color: oklch(50% 0.2306 29 / 0%)} }",
+				"wave-warning": "{0% {outline-width: 0; outline-color: oklch(50% 0.1268 110 / 80%)} 100% {outline-width: 6px; outline-color: oklch(50% 0.1268 110 / 0%)} }",
+				"wave-visited": "{0% {outline-width: 0; outline-color: oklch(50% 0.2514 328 / 80%)} 100% {outline-width: 6px; outline-color: oklch(50% 0.2514 328 / 0%)} }",
+				"wave-background": "{0% {outline-width: 0; outline-color: oklch(50% 0.0059 90 / 80%)} 100% {outline-width: 6px; outline-color: oklch(50% 0.0059 90 / 0%)} }",
+				"wave-foreground": "{0% {outline-width: 0; outline-color: oklch(50% 0.015 270 / 80%)} 100% {outline-width: 6px; outline-color: oklch(50% 0.015 270 / 0%)} }",
 			},
 			durations: {
 				...theme.animation?.durations,
 				"wave-primary": "0.8s",
-				"wave-neutral": "0.8s",
-				"wave-visited": "0.8s",
+				"wave-secondary": "0.8s",
 				"wave-success": "0.8s",
-				"wave-warning": "0.8s",
 				"wave-error": "0.8s",
+				"wave-warning": "0.8s",
+				"wave-visited": "0.8s",
+				"wave-background": "0.8s",
+				"wave-foreground": "0.8s",
 			},
 			timingFns: {
 				...theme.animation?.timingFns,
 				"wave-primary": "cubic-bezier(0, 0.64, 0, 1)",
-				"wave-neutral": "cubic-bezier(0, 0.64, 0, 1)",
-				"wave-visited": "cubic-bezier(0, 0.64, 0, 1)",
+				"wave-secondary": "cubic-bezier(0, 0.64, 0, 1)",
 				"wave-success": "cubic-bezier(0, 0.64, 0, 1)",
-				"wave-warning": "cubic-bezier(0, 0.64, 0, 1)",
 				"wave-error": "cubic-bezier(0, 0.64, 0, 1)",
+				"wave-warning": "cubic-bezier(0, 0.64, 0, 1)",
+				"wave-visited": "cubic-bezier(0, 0.64, 0, 1)",
+				"wave-background": "cubic-bezier(0, 0.64, 0, 1)",
+				"wave-foreground": "cubic-bezier(0, 0.64, 0, 1)",
 			},
 			counts: {
 				...theme.animation?.counts,
 				"wave-primary": "1",
-				"wave-neutral": "1",
-				"wave-visited": "1",
+				"wave-secondary": "1",
 				"wave-success": "1",
-				"wave-warning": "1",
 				"wave-error": "1",
+				"wave-warning": "1",
+				"wave-visited": "1",
+				"wave-background": "1",
+				"wave-foreground": "1",
 			},
 			category: {
 				...theme.animation?.category,
 				"wave-primary": "Attention Seekers",
-				"wave-neutral": "Attention Seekers",
-				"wave-visited": "Attention Seekers",
+				"wave-secondary": "Attention Seekers",
 				"wave-success": "Attention Seekers",
-				"wave-warning": "Attention Seekers",
 				"wave-error": "Attention Seekers",
+				"wave-warning": "Attention Seekers",
+				"wave-visited": "Attention Seekers",
+				"wave-background": "Attention Seekers",
+				"wave-foreground": "Attention Seekers",
 			},
 		},
 		shadow: {
 			...theme.shadow,
-			"focus-primary": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(from var(--colors-primary-500) l c h / 0.9)"],
-			"focus-neutral": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(from var(--colors-neutral-500) l c h / 0.9)"],
-			"focus-visited": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(from var(--colors-visited-500) l c h / 0.9)"],
-			"focus-success": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(from var(--colors-success-500) l c h / 0.9)"],
-			"focus-warning": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(from var(--colors-warning-500) l c h / 0.9)"],
-			"focus-error": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(from var(--colors-error-500) l c h / 0.9)"],
+			"focus-primary": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(50% 0.2999 264 / 90%)"],
+			"focus-secondary": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(50% 0.015 264 / 90%)"],
+			"focus-success": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(50% 0.1981 142 / 90%)"],
+			"focus-error": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(50% 0.2306 29 / 90%)"],
+			"focus-warning": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(50% 0.1268 110 / 90%)"],
+			"focus-visited": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(50% 0.2514 328 / 90%)"],
+			"focus-background": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(50% 0.0059 90 / 90%)"],
+			"focus-foreground": ["0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem) calc(var(--spacing-size) * 2rem) currentColor", "0 0 calc(var(--spacing-size) * pow(2, 0.75) * 1rem / 2) calc(var(--spacing-size) * 4rem) oklch(50% 0.015 270 / 90%)"],
 		},
 		media: {
 			...theme.media,
@@ -348,18 +481,33 @@ export default defineConfig({
 		{
 			getCSS: () => `:root, :host {
 					--spacing-size: 0.0625;
-					--radius: 1;
+					--radius: 1.25;
 					--text-size: 1;
-				}`
-		}
+				}`,
+		},
 	],
 	safelist: [
 		"before:animate-wave-primary",
-		"before:animate-wave-neutral",
-		"before:animate-wave-visited",
+		"before:animate-wave-secondary",
 		"before:animate-wave-success",
-		"before:animate-wave-warning",
 		"before:animate-wave-error",
-		"focus-visible:shadow-focus-neutral",
-	]
+		"before:animate-wave-warning",
+		"before:animate-wave-visited",
+		"before:animate-wave-background",
+		"before:animate-wave-foreground",
+		"surface-visited-1",
+		"focus-visible:shadow-focus-secondary",
+		"surface-primary-ia-14",
+		"visited:text-visited-ia-2",
+		"outline-none",
+		"outline-transparent",
+		"rounded-9d",
+		"fill-warning-d",
+		"fill-primary-d",
+		"fill-secondary-d",
+		"fill-foreground-d",
+		"fill-success-d",
+		"fill-error-d",
+		"fill-visited-d",
+	],
 });
