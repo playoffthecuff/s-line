@@ -6,22 +6,23 @@ import clsx from "clsx/lite";
 import { SpinnerIcon } from "@/components/ui/icons/spinner";
 import { useWaveAnimate } from "@/components/ui/use-wave-animate";
 
-const buttonVariants = cva(
-	"inline-flex h-[2em] min-w-[2em] px-[calc(0.375em-2px)] media-pointer_coarse:h-[2.25em] media-pointer_coarse:min-w-[2.25em] items-center justify-center whitespace-nowrap transition-all [&_svg]:pointer-events-none cursor-pointer relative select-none before:absolute before:inset-0 before:block before:outline-0 before:content-[''] outline-none",
+const toggleVariants = cva(
+	"inline-flex h-[2em] min-w-[2em] px-[calc(0.375em-2px)] items-center justify-center whitespace-nowrap transition-all [&_svg]:pointer-events-none cursor-pointer relative select-none before:absolute before:inset-0 before:block before:outline-0 before:content-[''] outline-none",
 	{
 		variants: {
 			intent: {
+				neutral: "focus-visible:shadow-focus-foreground",
 				primary: "focus-visible:shadow-focus-primary",
 				destructive: "focus-visible:shadow-focus-error",
 				visited: "focus-visible:shadow-focus-visited",
-				secondary: "focus-visible:shadow-focus-neutral",
+				secondary: "focus-visible:shadow-focus-secondary",
 				success: "focus-visible:shadow-focus-success",
 				warning: "focus-visible:shadow-focus-warning",
 			},
 			size: {
-				s: "text-3d media-pointer_coarse:text-4d font-10d ",
-				m: "text-4d media-pointer_coarse:text-5d font-9d",
-				l: "text-5d media-pointer_coarse:text-6d font-8d",
+				s: "text-3d font-10d",
+				m: "text-4d font-9d",
+				l: "text-5d font-8d",
 			},
 			lifted: {
 				true: null,
@@ -42,548 +43,302 @@ const buttonVariants = cva(
 				text: null,
 			},
 			disabled: {
-				false: null,
-				true: "saturate-75 opacity-50 pointer-events-none",
+				true: "saturate-75 opacity-50 contrast-60 pointer-events-none",
 			},
 			loading: {
-				false: null,
-				true: "saturate-75 opacity-50 pointer-events-none",
+				true: "pointer-events-none",
 			},
 			effect: {
 				fill: "[&[data-pressed]>svg]:fill-current",
-				bgColor: "",
+				bgColor: null,
+				none: null,
 			},
 		},
 		compoundVariants: [
 			{
-				appearance: ["outline", "solid", "subtle", "ghost", "text"],
+				appearance: ["outline", "solid", "subtle", "ghost"],
 				lifted: true,
-				className:
-					"shadow-lifted",
-			},
-			{
-				appearance: "solid",
-				intent: "primary",
-				className:
-					"text-neutral-light bg-primary-500 hover:bg-primary-500|10l focus-visible:bg-primary-500|10l active:bg-primary-500|-5l",
-			},
-			{
-				appearance: "subtle",
-				intent: "primary",
-				lifted: false,
-				className: [
-					"text-primary surface-primary",
-					"hover:bg-primary-500/17d focus-visible:bg-primary-500/17d active:bg-primary-500/11d",
-					"dark:hover:bg-primary-500/8d dark:focus-visible:bg-primary-500/8d dark:active:bg-primary-500/5d",
-				],
-			},
-			{
-				intent: "primary",
-				appearance: "outline",
-				effect: "bgColor",
-				className: [
-					"data-[pressed]:bg-primary-500/23d dark:data-[pressed]:bg-primary-500/14d"
-				]
-			},
-			{
-				intent: "primary",
-				appearance: "subtle",
-				lifted: true,
-				className: [
-					"text-primary surface-primary",
-					"hover:bg-primary-500/29d focus-visible:bg-primary-500/29d active:bg-primary-500/20d",
-					"dark:hover:bg-primary-500/8d dark:focus-visible:bg-primary-500/8d dark:active:bg-primary-500/20d",
-				],
-			},
-			{
-				intent: "primary",
-				appearance: "outline",
-				lifted: false,
-				className: [
-					"text-primary",
-					"hover:bg-primary-500/23d active:bg-primary-500/17d focus-visible:bg-primary-500/23d",
-					"border-primary-600",
-					"dark:hover:bg-primary-500/14d dark:active:bg-primary-500/8d dark:focus-visible:bg-primary-500/14d",
-					"dark:border-primary-250 dark:hover:border-primary-250/50 dark:active:border-primary-250/25",
-				],
-			},
-			{
-				intent: "primary",
-				appearance: "outline",
-				lifted: true,
-				className: [
-					"text-primary",
-					"hover:bg-primary-500/29d active:bg-primary-500/20d focus-visible:bg-primary-500/29d",
-					"border-primary-600",
-					"dark:hover:bg-primary-500/14d dark:active:bg-primary-500/20d dark:focus-visible:bg-primary-500/14d",
-					"dark:border-primary-250 dark:hover:border-primary-250/50 dark:active:border-primary-250/25",
-				],
-			},
-			{
-				appearance: "ghost",
-				intent: "primary",
-				lifted: false,
-				className: [
-					"text-primary",
-					"hover:bg-primary-500/23d active:bg-primary-500/17d focus-visible:bg-primary-500/23d",
-					"dark:hover:bg-primary-500/14d dark:active:bg-primary-500/8d dark:focus-visible:bg-primary-500/14d",
-				],
-			},
-			{
-				appearance: "ghost",
-				intent: "primary",
-				lifted: true,
-				className: [
-					"text-primary",
-					"hover:bg-primary-500/29d active:bg-primary-500/20d focus-visible:bg-primary-500/29d",
-					"dark:hover:bg-primary-500/14d dark:active:bg-primary-500/20d dark:focus-visible:bg-primary-500/14d",
-				],
-			},
-			{
-				appearance: "text",
-				intent: "primary",
-				className: ["text-primary"],
+				className: "shadow-lifted-ia",
 			},
 
 			{
+				intent: "primary",
 				appearance: "solid",
-				intent: "destructive",
-				className:
-					"text-neutral-light bg-error-500 hover:bg-error-500|10l focus-visible:bg-error-500|10l active:bg-error-500|-5l",
+				className: "surface-primary-solid-ia",
 			},
 			{
-				intent: "destructive",
+				intent: "primary",
 				appearance: "subtle",
-				lifted: false,
-				className: [
-					"text-error surface-error",
-					"hover:bg-error-500/17d focus-visible:bg-error-500/17d active:bg-error-500/11d",
-					"dark:hover:bg-error-500/8d dark:focus-visible:bg-error-500/8d dark:active:bg-error-500/5d",
-				],
+				className: "surface-primary-subtle-ia",
 			},
 			{
-				intent: "destructive",
-				appearance: "subtle",
-				lifted: true,
-				className: [
-					"text-error surface-error",
-					"hover:bg-error-500/29d focus-visible:bg-error-500/29d active:bg-error-500/20d",
-					"dark:hover:bg-error-500/14d dark:focus-visible:bg-error-500/14d dark:active:bg-error-500/20d",
-				],
+				intent: "primary",
+				appearance: ["outline", "ghost"],
+				className: "surface-primary-outline-ia",
 			},
 			{
-				intent: "destructive",
-				appearance: "outline",
+				intent: "primary",
+				appearance: ["ghost", "outline"],
 				effect: "bgColor",
-				className: [
-					"data-[pressed]:bg-error-500/23d dark:data-[pressed]:bg-error-500/14d"
-				]
+				className: "surface-primary-toggleable",
 			},
 			{
-				intent: "destructive",
-				appearance: "outline",
-				lifted: false,
-				className: [
-					"text-error",
-					"hover:bg-error-500/23d active:bg-error-500/17d focus-visible:bg-error-500/23d",
-					"border-error-600",
-					"dark:hover:bg-error-500/14d dark:active:bg-error-500/8d dark:focus-visible:bg-error-500/14d",
-					"dark:border-error-250 dark:hover:border-error-250/50 active:hover:border-error-250/25",
-				],
-			},
-			{
-				intent: "destructive",
-				appearance: "outline",
-				lifted: true,
-				className: [
-					"text-error",
-					"hover:bg-error-500/29d active:bg-error-500/20d focus-visible:bg-error-500/29d",
-					"border-error-600",
-					"dark:hover:bg-error-500/14d dark:active:bg-error-500/20d dark:focus-visible:bg-error-500/14d",
-					"dark:border-error-250 dark:hover:border-error-250/50 active:hover:border-error-250/25",
-				],
-			},
-			{
-				intent: "destructive",
-				appearance: "ghost",
-				lifted: false,
-				className: [
-					"text-error",
-					"hover:bg-error-500/23d active:bg-error-500/17d focus-visible:bg-error-500/23d",
-					"dark:hover:bg-error-500/14d dark:active:bg-error-500/8d dark:focus-visible:bg-error-500/14d",
-				],
-			},
-			{
-				intent: "destructive",
-				appearance: "ghost",
-				lifted: true,
-				className: [
-					"text-error",
-					"hover:bg-error-500/29d active:bg-error-500/20d focus-visible:bg-error-500/29d",
-					"dark:hover:bg-error-500/14d dark:active:bg-error-500/20d dark:focus-visible:bg-error-500/14d",
-				],
-			},
-			{
+				intent: "primary",
 				appearance: "text",
-				intent: "destructive",
-				className: ["text-error"],
+				lifted: false,
+				className: "text-primary-ia",
+			},
+			{
+				intent: "primary",
+				appearance: "text",
+				lifted: true,
+				className:
+					"text-primary-1-ia drop-shadow-4d hover:drop-shadow-6d active:drop-shadow-2d",
 			},
 
 			{
+				intent: "destructive",
 				appearance: "solid",
-				intent: "visited",
-				className:
-					"text-neutral-light bg-visited-500 hover:bg-visited-500|10l focus-visible:bg-visited-500|10l active:bg-visited-500|-5l",
+				className: "surface-error-solid-ia",
 			},
 			{
-				intent: "visited",
+				intent: "destructive",
 				appearance: "subtle",
-				lifted: false,
-				className: [
-					[
-						"text-visited surface-visited",
-						"hover:bg-visited-500/17d focus-visible:bg-visited-500/17d active:bg-visited-500/11d",
-						"dark:hover:bg-visited-500/8d dark:focus-visible:bg-visited-500/8d dark:active:bg-visited-500/5d",
-					],
-				],
+				className: "surface-error-subtle-ia",
 			},
 			{
-				intent: "visited",
-				appearance: "subtle",
-				lifted: true,
-				className: [
-					[
-						"text-visited surface-visited",
-						"hover:bg-visited-500/29d focus-visible:bg-visited-500/29d active:bg-visited-500/20d",
-						"dark:hover:bg-visited-500/8d dark:focus-visible:bg-visited-500/8d dark:active:bg-visited-500/20d",
-					],
-				],
+				intent: "destructive",
+				appearance: ["outline", "ghost"],
+				className: "surface-error-outline-ia",
 			},
 			{
-				intent: "visited",
-				appearance: "outline",
+				intent: "destructive",
+				appearance: ["ghost", "outline"],
 				effect: "bgColor",
-				className: [
-					"data-[pressed]:bg-visited-500/23d dark:data-[pressed]:bg-visited-500/14d"
-				]
+				className: "surface-error-toggleable",
 			},
 			{
-				intent: "visited",
-				appearance: "outline",
-				lifted: false,
-				className: [
-					"text-visited",
-					"hover:bg-visited-500/23d active:bg-visited-500/17d focus-visible:bg-visited-500/23d",
-					"border-visited-600",
-					"dark:hover:bg-visited-500/14d dark:active:bg-visited-500/8d dark:focus-visible:bg-visited-500/14d",
-					"dark:border-visited-250 dark:hover:border-visited-250/50 active:hover:border-visited-250/25",
-				],
-			},
-			{
-				intent: "visited",
-				appearance: "outline",
-				lifted: true,
-				className: [
-					"text-visited",
-					"hover:bg-visited-500/29d active:bg-visited-500/20d focus-visible:bg-visited-500/29d",
-					"border-visited-600",
-					"dark:hover:bg-visited-500/14d dark:active:bg-visited-500/20d dark:focus-visible:bg-visited-500/14d",
-					"dark:border-visited-250 dark:hover:border-visited-250/50 active:hover:border-visited-250/25",
-				],
-			},
-			{
-				intent: "visited",
-				appearance: "ghost",
-				lifted: false,
-				className: [
-					"text-visited",
-					"hover:bg-visited-500/23d active:bg-visited-500/17d focus-visible:bg-visited-500/23d",
-					"dark:hover:bg-visited-500/14d dark:active:bg-visited-500/8d dark:focus-visible:bg-visited-500/14d",
-				],
-			},
-			{
-				intent: "visited",
-				appearance: "ghost",
-				lifted: true,
-				className: [
-					"text-visited",
-					"hover:bg-visited-500/29d active:bg-visited-500/20d focus-visible:bg-visited-500/29d",
-					"dark:hover:bg-visited-500/14d dark:active:bg-visited-500/20d dark:focus-visible:bg-visited-500/14d",
-				],
-			},
-			{
+				intent: "destructive",
 				appearance: "text",
-				intent: "visited",
-				className: ["text-visited"],
+				lifted: false,
+				className: "text-error-ia",
+			},
+			{
+				intent: "destructive",
+				appearance: "text",
+				lifted: true,
+				className:
+					"text-error-1-ia drop-shadow-4d hover:drop-shadow-6d active:drop-shadow-2d",
 			},
 
 			{
+				intent: "visited",
 				appearance: "solid",
-				intent: "warning",
-				className:
-					"text-neutral-dark bg-warning-300 hover:bg-warning-300|10l focus-visible:bg-warning-300|10l active:bg-warning-300|-5l",
+				className: "surface-visited-solid-ia",
 			},
 			{
-				intent: "warning",
+				intent: "visited",
 				appearance: "subtle",
-				lifted: false,
-				className: [
-					"text-warning surface-warning",
-					"hover:bg-warning-500/17d focus-visible:bg-warning-500/17d active:bg-warning-500/11d",
-					"dark:hover:bg-warning-500/8d dark:focus-visible:bg-warning-500/8d dark:active:bg-warning-500/5d",
-				],
+				className: "surface-visited-subtle-ia",
 			},
 			{
-				intent: "warning",
-				appearance: "subtle",
-				lifted: true,
-				className: [
-					"text-warning surface-warning",
-					"hover:bg-warning-500/29d focus-visible:bg-warning-500/29d active:bg-warning-500/20d",
-					"dark:hover:bg-warning-500/8d dark:focus-visible:bg-warning-500/8d dark:active:bg-warning-500/20d",
-				],
+				intent: "visited",
+				appearance: ["outline", "ghost"],
+				className: "surface-visited-outline-ia",
 			},
 			{
-				intent: "warning",
-				appearance: "outline",
+				intent: "visited",
+				appearance: ["ghost", "outline"],
 				effect: "bgColor",
-				className: [
-					"data-[pressed]:bg-warning-500/23d dark:data-[pressed]:bg-warning-500/14d"
-				]
+				className: "surface-visited-toggleable",
 			},
 			{
-				intent: "warning",
-				appearance: "outline",
-				lifted: false,
-				className: [
-					"text-warning",
-					"hover:bg-warning-500/23d active:bg-warning-500/17d focus-visible:bg-warning-500/23d",
-					"border-warning-600",
-					"dark:hover:bg-warning-500/14d dark:active:bg-warning-500/8d dark:focus-visible:bg-warning-500/14d",
-					"dark:border-warning-250 dark:hover:border-warning-250/50 dark:active:border-warning-250/25",
-				],
-			},
-			{
-				intent: "warning",
-				appearance: "outline",
-				lifted: true,
-				className: [
-					"text-warning",
-					"hover:bg-warning-500/29d active:bg-warning-500/20d focus-visible:bg-warning-500/29d",
-					"border-warning-600",
-					"dark:hover:bg-warning-500/14d dark:active:bg-warning-500/20d dark:focus-visible:bg-warning-500/14d",
-					"dark:border-warning-250 dark:hover:border-warning-250/50 dark:active:border-warning-250/25",
-				],
-			},
-			{
-				intent: "warning",
-				appearance: "ghost",
-				lifted: false,
-				className: [
-					"text-warning",
-					"hover:bg-warning-500/23d active:bg-warning-500/17d focus-visible:bg-warning-500/23d",
-					"dark:hover:bg-warning-500/14d dark:active:bg-warning-500/8d dark:focus-visible:bg-warning-500/14d",
-				],
-			},
-			{
-				intent: "warning",
-				appearance: "ghost",
-				lifted: true,
-				className: [
-					"text-warning",
-					"hover:bg-warning-500/29d active:bg-warning-500/20d focus-visible:bg-warning-500/29d",
-					"dark:hover:bg-warning-500/14d dark:active:bg-warning-500/20d dark:focus-visible:bg-warning-500/14d",
-				],
-			},
-			{
+				intent: "visited",
 				appearance: "text",
-				intent: "warning",
-				className: ["text-warning"],
+				lifted: false,
+				className: "text-visited-ia",
+			},
+			{
+				intent: "visited",
+				appearance: "text",
+				lifted: true,
+				className:
+					"text-visited-1-ia drop-shadow-4d hover:drop-shadow-6d active:drop-shadow-2d",
 			},
 
 			{
+				intent: "warning",
 				appearance: "solid",
-				intent: "success",
-				className:
-					"text-neutral-dark bg-success-350 hover:bg-success-350|10l focus-visible:bg-success-350|10l active:bg-success-350|-5l",
+				className: "surface-warning-solid-ia",
 			},
 			{
-				intent: "success",
+				intent: "warning",
 				appearance: "subtle",
-				lifted: false,
-				className: [
-					"text-success surface-success",
-					"hover:bg-success-500/17d focus-visible:bg-success-500/17d active:bg-success-500/11d",
-					"dark:hover:bg-success-500/8d dark:focus-visible:bg-success-500/8d dark:active:bg-success-500/5d",
-				],
+				className: "surface-warning-subtle-ia",
 			},
 			{
-				intent: "success",
-				appearance: "subtle",
-				lifted: true,
-				className: [
-					"text-success surface-success",
-					"hover:bg-success-500/29d focus-visible:bg-success-500/29d active:bg-success-500/20d",
-					"dark:hover:bg-success-500/8d dark:focus-visible:bg-success-500/8d dark:active:bg-success-500/20d",
-				],
+				intent: "warning",
+				appearance: ["outline", "ghost"],
+				className: "surface-warning-outline-ia",
 			},
 			{
-				intent: "success",
-				appearance: "outline",
+				intent: "warning",
+				appearance: ["ghost", "outline"],
 				effect: "bgColor",
-				className: [
-					"data-[pressed]:bg-success-500/23d dark:data-[pressed]:bg-success-500/14d"
-				]
+				className: "surface-warning-toggleable",
 			},
 			{
-				intent: "success",
-				appearance: "outline",
-				lifted: false,
-				className: [
-					"text-success",
-					"hover:bg-success-500/23d active:bg-success-500/17d focus-visible:bg-success-500/17d",
-					"border-success-600",
-					"dark:hover:bg-success-500/14d dark:active:bg-success-500/8d dark:focus-visible:bg-success-500/8d",
-					"dark:border-success-250 dark:hover:border-success-250/50 dark:active:border-success-250/25",
-				],
-			},
-			{
-				intent: "success",
-				appearance: "outline",
-				lifted: true,
-				className: [
-					"text-success",
-					"hover:bg-success-500/29d active:bg-success-500/20d focus-visible:bg-success-500/29d",
-					"border-success-600",
-					"dark:hover:bg-success-500/14d dark:active:bg-success-500/14d dark:focus-visible:bg-success-500/20d",
-					"dark:border-success-250 dark:hover:border-success-250/50 dark:active:border-success-250/25",
-				],
-			},
-			{
-				intent: "success",
-				appearance: "ghost",
-				lifted: false,
-				className: [
-					"text-success",
-					"hover:bg-success-500/23d active:bg-success-500/23d focus-visible:bg-success-500/17d",
-					"dark:hover:bg-success-500/14d dark:active:bg-success-500/8d dark:focus-visible:bg-success-500/14d",
-				],
-			},
-			{
-				intent: "success",
-				appearance: "ghost",
-				lifted: true,
-				className: [
-					"text-success",
-					"hover:bg-success-500/29d active:bg-success-500/29d focus-visible:bg-success-500/20d",
-					"dark:hover:bg-success-500/14d dark:active:bg-success-500/20d dark:focus-visible:bg-success-500/14d",
-				],
-			},
-			{
+				intent: "warning",
 				appearance: "text",
-				intent: "success",
-				className: ["text-success"],
+				lifted: false,
+				className: "text-warning-ia",
+			},
+			{
+				intent: "warning",
+				appearance: "text",
+				lifted: true,
+				className:
+					"text-warning-1-ia drop-shadow-4d hover:drop-shadow-6d active:drop-shadow-2d",
 			},
 
 			{
+				intent: "success",
 				appearance: "solid",
-				intent: "secondary",
-				className:
-					"text-neutral-light bg-neutral-500 hover:bg-neutral-500|10l focus-visible:bg-neutral-500|10l active:bg-neutral-500|-5l",
+				className: "surface-success-solid-ia",
 			},
 			{
-				intent: "secondary",
+				intent: "success",
 				appearance: "subtle",
-				lifted: false,
-				className: [
-					"text-muted surface-neutral",
-					"hover:bg-neutral-500/17d focus-visible:bg-neutral-500/17d active:bg-neutral-500/11d",
-					"dark:hover:bg-neutral-500/8d dark:focus-visible:bg-neutral-500/8d dark:active:bg-neutral-500/5d",
-				],
+				className: "surface-success-subtle-ia",
 			},
 			{
-				intent: "secondary",
-				appearance: "subtle",
-				lifted: true,
-				className: [
-					"text-muted surface-neutral",
-					"hover:bg-neutral-500/29d focus-visible:bg-neutral-500/29d active:bg-neutral-500/20d",
-					"dark:hover:bg-neutral-500/8d dark:focus-visible:bg-neutral-500/8d dark:active:bg-neutral-500/20d",
-				],
+				intent: "success",
+				appearance: ["outline", "ghost"],
+				className: "surface-success-outline-ia",
 			},
-						{
-				intent: "secondary",
-				appearance: "outline",
+			{
+				intent: "success",
+				appearance: ["ghost", "outline"],
 				effect: "bgColor",
-				className: [
-					"data-[pressed]:bg-neutral-500/23d dark:data-[pressed]:bg-neutral-500/14d"
-				]
+				className: "surface-success-toggleable"
 			},
 			{
-				intent: "secondary",
-				appearance: "outline",
-				lifted: false,
-				className: [
-					"text-muted",
-					"hover:bg-neutral-500/23d active:bg-neutral-500/17d focus-visible:bg-neutral-500/17d",
-					"border-neutral-600",
-					"dark:hover:bg-neutral-500/14d dark:active:bg-neutral-500/8d dark:focus-visible:bg-neutral-500/5d",
-					"dark:border-neutral-250 dark:hover:border-neutral-250/50 dark:active:border-neutral-250/25",
-				],
-			},
-			{
-				intent: "secondary",
-				appearance: "outline",
-				lifted: true,
-				className: [
-					"text-muted",
-					"hover:bg-neutral-500/29d active:bg-neutral-500/20d focus-visible:bg-neutral-500/29d",
-					"border-neutral-600",
-					"dark:hover:bg-neutral-500/14d dark:active:bg-neutral-500/20d dark:focus-visible:bg-neutral-500/14d",
-					"dark:border-neutral-250 dark:hover:border-neutral-250/50 dark:active:border-neutral-250/25",
-				],
-			},
-			{
-				intent: "secondary",
-				appearance: "ghost",
-				lifted: false,
-				className: [
-					"text-muted",
-					"hover:bg-neutral-500/23d active:bg-neutral-500/17d focus-visible:bg-neutral-500/23d",
-					"dark:hover:bg-neutral-500/14d dark:active:bg-neutral-500/8d dark:focus-visible:bg-neutral-500/14d",
-				],
-			},
-			{
-				intent: "secondary",
-				appearance: "ghost",
-				lifted: true,
-				className: [
-					"text-muted",
-					"hover:bg-neutral-500/29d active:bg-neutral-500/20d focus-visible:bg-neutral-500/29d",
-					"dark:hover:bg-neutral-500/14d dark:active:bg-neutral-500/14d dark:focus-visible:bg-neutral-500/20d",
-				],
-			},
-			{
+				intent: "success",
 				appearance: "text",
+				lifted: false,
+				className: "text-success-ia",
+			},
+			{
+				intent: "success",
+				appearance: "text",
+				lifted: true,
+				className:
+					"text-success-1-ia drop-shadow-4d hover:drop-shadow-6d active:drop-shadow-2d",
+			},
+
+			{
 				intent: "secondary",
-				className: ["text-muted"],
+				appearance: "solid",
+				className: "surface-secondary-solid-ia",
+			},
+			{
+				intent: "secondary",
+				appearance: "subtle",
+				className: "surface-secondary-subtle-ia",
+			},
+			{
+				intent: "secondary",
+				appearance: ["outline", "ghost"],
+				className: "surface-secondary-outline-ia",
+			},
+			{
+				intent: "secondary",
+				appearance: ["ghost", "outline"],
+				effect: "bgColor",
+				className: "surface-secondary-toggleable"
+			},
+			{
+				intent: "secondary",
+				appearance: "text",
+				lifted: false,
+				className: "text-secondary-ia",
+			},
+			{
+				intent: "secondary",
+				appearance: "text",
+				lifted: true,
+				className:
+					"text-secondary-1-ia drop-shadow-4d hover:drop-shadow-6d active:drop-shadow-2d",
+			},
+
+			{
+				intent: "neutral",
+				appearance: "solid",
+				className: "surface-foreground-solid-ia",
+			},
+			{
+				intent: "neutral",
+				appearance: "subtle",
+				className: "surface-foreground-subtle-ia",
+			},
+			{
+				intent: "neutral",
+				appearance: "outline",
+				className: "surface-foreground-outline-ia",
+			},
+			{
+				intent: "neutral",
+				appearance: "ghost",
+				className: "surface-foreground-ghost-ia",
+			},
+			{
+				intent: "neutral",
+				appearance: ["ghost", "outline"],
+				effect: "bgColor",
+				className: "surface-foreground-toggleable",
+			},
+			{
+				intent: "neutral",
+				appearance: "text",
+				lifted: false,
+				className: "text-foreground-ia",
+			},
+			{
+				intent: "neutral",
+				appearance: "text",
+				lifted: true,
+				className:
+					"text-foreground-1-ia drop-shadow-4d hover:drop-shadow-6d active:drop-shadow-2d",
 			},
 		],
 		defaultVariants: {
-			intent: "primary",
+			intent: "neutral",
 			size: "m",
 			shape: "rounded",
 			appearance: "solid",
 			lifted: false,
 			disabled: false,
 			loading: false,
+			effect: "none",
 		},
 	},
 );
 
-const intentColors = {
+const wrapperVariants = cva(null, {
+	variants: {
+		loading: {
+			true: "cursor-wait",
+		},
+		disabled: {
+			true: "cursor-not-allowed",
+		},
+	},
+});
+
+const intentToColors = {
 	primary: "primary",
-	secondary: "neutral",
+	neutral: "foreground",
+	secondary: "secondary",
 	destructive: "error",
 	warning: "warning",
 	success: "success",
@@ -606,9 +361,9 @@ export function Toggle({
 	onKeyDown,
 	onKeyUp,
 	...props
-}: BaseToggle.Props & VariantProps<typeof buttonVariants>) {
+}: BaseToggle.Props & VariantProps<typeof toggleVariants>) {
 	const effects = useWaveAnimate({
-		animateClassName: `before:animate-wave-${intentColors[intent ?? "primary"]}`,
+		animateClassName: `before:animate-wave-${intentToColors[intent ?? "neutral"]}`,
 		onKeyDown,
 		onKeyUp,
 		onMouseDown,
@@ -616,35 +371,37 @@ export function Toggle({
 		disabled: appearance === "text",
 	});
 	return (
-		<BaseToggle
-			ref={effects.ref}
-			data-slot="button"
-			className={clsx(
-				buttonVariants({
-					intent,
-					size,
-					shape,
-					appearance,
-					disabled,
-					loading,
-					lifted,
-					effect,
-				}),
-				className,
-			)}
-			onKeyDown={effects.onKeyDown}
-			onKeyUp={effects.onKeyUp}
-			onMouseDown={effects.onMouseDown}
-			onMouseUp={effects.onMouseUp}
-			disabled={disabled || !!loading}
-			{...props}
-		>
-			{loading && <SpinnerIcon className="animate-spin absolute" />}
-			{loading ? (
-				<span className="text-transparent">{children}</span>
-			) : (
-				children
-			)}
-		</BaseToggle>
+		<span className={wrapperVariants({loading, disabled})}>
+			<BaseToggle
+				ref={effects.ref}
+				data-slot="button"
+				className={clsx(
+					toggleVariants({
+						intent,
+						size,
+						shape,
+						appearance,
+						disabled,
+						loading,
+						lifted,
+						effect,
+					}),
+					className,
+				)}
+				onKeyDown={effects.onKeyDown}
+				onKeyUp={effects.onKeyUp}
+				onMouseDown={effects.onMouseDown}
+				onMouseUp={effects.onMouseUp}
+				disabled={disabled}
+				{...props}
+			>
+				{loading && <SpinnerIcon className="animate-spin absolute pointer-events-none" />}
+				{loading ? (
+					<span className="text-transparent">{children}</span>
+				) : (
+					children
+				)}
+			</BaseToggle>
+		</span>
 	);
 }

@@ -1,33 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { Toggle } from "@/components/ui/toggle/toggle";
 import { HighlightedCode } from "@/components/ui/highlighted-code";
 import { DislikeIcon } from "@/components/ui/icons/dislike";
 import { HeartIcon } from "@/components/ui/icons/heart";
 import { LikeIcon } from "@/components/ui/icons/like";
 import { SmartphoneIcon } from "@/components/ui/icons/smartphone";
+import { Toggle } from "@/components/ui/toggle/toggle";
+import { Title } from "@/components/ui/typography/title";
 
 export default function TogglePage() {
 	const [pressed, setPressed] = useState(true);
 	const handlePress = () => setPressed(!pressed);
 	return (
-		<div className="max-w-200 mx-auto p-16d flex flex-col gap-16d">
+		<div className="max-w-200 min-h-full bg-1 mx-auto p-18d flex flex-col gap-16d [&&]-pb-20">
 			<div>
-				<h1 className="text-8d font-11d">Toggle</h1>
+				<Title>Toggle</Title>
 				<p>A user-activated, toggleable interactive component.</p>
 			</div>
-			<div className="relative">
-				<h2 className="text-7d font-11d">Installation</h2>
+			<div>
+				<Title size={2}>Installation</Title>
 				<HighlightedCode
 					code="bunx @playoffthecuff/s3-line@latest add toggle"
 					language="yaml"
 					lineNumbers={false}
 				/>
 			</div>
-			<h2 className="text-7d font-11d -mb-2">Variants:</h2>
+			<hr className="mt-16d mb-12d" />
+			<Title size={2}>Variants:</Title>
 			<div>
-				<h3 className="text-5d font-11d">Size</h3>
+				<Title size={3}>Size</Title>
 				<div className="flex flex-wrap gap-16d items-center">
 					<div className="flex gap-10d items-center">
 						<Toggle
@@ -62,17 +64,28 @@ export default function TogglePage() {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-5d font-11d">Toggle Effect</h3>
+				<Title size={3}>Toggle Effect</Title>
 				<div className="flex flex-wrap gap-16d items-center">
 					<div className="flex gap-10d items-center">
-						<Toggle size={"m"} onPressedChange={handlePress} effect={undefined} pressed={pressed}>
+						<Toggle
+							size={"m"}
+							onPressedChange={handlePress}
+							effect={"none"}
+							pressed={pressed}
+						>
 							{pressed ? <LikeIcon /> : <DislikeIcon />}
 						</Toggle>
 						None
 					</div>
 					<div className="flex gap-10d items-center">
 						<div className="flex">
-							<Toggle size={"m"} onPressedChange={handlePress} effect={"bgColor"} appearance={"outline"} pressed={pressed}>
+							<Toggle
+								size={"m"}
+								onPressedChange={handlePress}
+								effect={"bgColor"}
+								appearance={"outline"}
+								pressed={pressed}
+							>
 								<SmartphoneIcon />
 							</Toggle>
 						</div>
@@ -92,7 +105,7 @@ export default function TogglePage() {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-5d font-11d">Shape</h3>
+				<Title size={3}>Shape</Title>
 				<div className="flex flex-wrap gap-16d items-center">
 					<div className="flex gap-10d items-center">
 						<Toggle
@@ -127,8 +140,18 @@ export default function TogglePage() {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-5d font-11d">Intent</h3>
+				<Title size={3}>Intent</Title>
 				<div className="flex flex-wrap gap-16d items-center">
+					<div className="flex gap-10d items-center">
+						<Toggle
+							intent={"neutral"}
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+						Neutral
+					</div>
 					<div className="flex gap-10d items-center">
 						<Toggle
 							intent={"primary"}
@@ -137,7 +160,7 @@ export default function TogglePage() {
 						>
 							<HeartIcon />
 						</Toggle>
-					Primary
+						Primary
 					</div>
 					<div className="flex gap-10d items-center">
 						<Toggle
@@ -192,7 +215,7 @@ export default function TogglePage() {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-5d font-11d">Appearance</h3>
+				<Title size={3}>Appearance</Title>
 				<div className="grid grid-cols-[repeat(5,max-content)] w-fit gap-16d">
 					<span className="-mb-4">Solid</span>
 					<span className="-mb-4">Subtle</span>
@@ -202,6 +225,56 @@ export default function TogglePage() {
 					<div className="flex gap-10d items-center">
 						<Toggle
 							appearance={"solid"}
+							intent={"neutral"}
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"subtle"}
+							intent={"neutral"}
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"outline"}
+							intent={"neutral"}
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"ghost"}
+							intent={"neutral"}
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"text"}
+							intent={"neutral"}
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"solid"}
 							intent={"primary"}
 							onPressedChange={(v) => console.log("toggled to", v)}
 							effect={"fill"}
@@ -493,6 +566,415 @@ export default function TogglePage() {
 						<Toggle
 							intent={"success"}
 							appearance={"text"}
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<Title size={3} className="col-span-5 -mb-4">Lifted</Title>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"solid"}
+							intent={"neutral"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"subtle"}
+							intent={"neutral"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"outline"}
+							intent={"neutral"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"ghost"}
+							intent={"neutral"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"text"}
+							intent={"neutral"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"solid"}
+							intent={"primary"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"subtle"}
+							intent={"primary"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"outline"}
+							intent={"primary"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"ghost"}
+							intent={"primary"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"text"}
+							intent={"primary"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"solid"}
+							intent={"secondary"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"subtle"}
+							intent={"secondary"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"outline"}
+							intent={"secondary"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"ghost"}
+							intent={"secondary"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"text"}
+							intent={"secondary"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"solid"}
+							intent={"destructive"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"subtle"}
+							intent={"destructive"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"outline"}
+							intent={"destructive"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"ghost"}
+							intent={"destructive"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"text"}
+							intent={"destructive"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"solid"}
+							intent={"warning"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"subtle"}
+							intent={"warning"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"outline"}
+							intent={"warning"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"ghost"}
+							intent={"warning"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"text"}
+							intent={"warning"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"solid"}
+							intent={"success"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"subtle"}
+							intent={"success"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"outline"}
+							intent={"success"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"ghost"}
+							intent={"success"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"text"}
+							intent={"success"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"solid"}
+							intent={"visited"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"subtle"}
+							intent={"visited"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"outline"}
+							intent={"visited"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"ghost"}
+							intent={"visited"}
+							lifted
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance={"text"}
+							intent={"visited"}
+							lifted
 							onPressedChange={(v) => console.log("toggled to", v)}
 							effect={"fill"}
 						>
@@ -502,72 +984,12 @@ export default function TogglePage() {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-5d font-11d">Lifted</h3>
+				<Title size={3}>State</Title>
 				<div className="flex flex-wrap gap-16d items-start">
 					<div className="flex gap-10d items-center">
 						<Toggle
-							appearance={"solid"}
-							intent={"primary"}
-							lifted
-							onPressedChange={(v) => console.log("toggled to", v)}
-							effect={"fill"}
-						>
-							<HeartIcon />
-						</Toggle>
-					</div>
-					<div className="flex gap-10d items-center">
-						<Toggle
-							appearance={"subtle"}
-							intent={"primary"}
-							lifted
-							onPressedChange={(v) => console.log("toggled to", v)}
-							effect={"fill"}
-						>
-							<HeartIcon />
-						</Toggle>
-					</div>
-					<div className="flex gap-10d items-center">
-						<Toggle
-							appearance={"outline"}
-							intent={"primary"}
-							lifted
-							onPressedChange={(v) => console.log("toggled to", v)}
-							effect={"fill"}
-						>
-							<HeartIcon />
-						</Toggle>
-					</div>
-					<div className="flex gap-10d items-center">
-						<Toggle
-							appearance={"ghost"}
-							intent={"primary"}
-							lifted
-							onPressedChange={(v) => console.log("toggled to", v)}
-							effect={"fill"}
-						>
-							<HeartIcon />
-						</Toggle>
-					</div>
-					<div className="flex gap-10d items-center">
-						<Toggle
-							appearance={"text"}
-							intent={"primary"}
-							lifted
-							onPressedChange={(v) => console.log("toggled to", v)}
-							effect={"fill"}
-						>
-							<HeartIcon />
-						</Toggle>
-					</div>
-				</div>
-			</div>
-			<div>
-				<h3 className="text-5d font-11d">State</h3>
-				<div className="flex flex-wrap gap-16d items-start">
-					<div className="flex gap-10d items-center">
-						<Toggle
-							appearance={"solid"}
-							intent={"primary"}
+							appearance="solid"
+							intent={"neutral"}
 							disabled
 							onPressedChange={(v) => console.log("toggled to", v)}
 							effect={"fill"}
@@ -578,8 +1000,8 @@ export default function TogglePage() {
 					</div>
 					<div className="flex gap-10d items-center">
 						<Toggle
-							appearance={"solid"}
-							intent={"primary"}
+							appearance="solid"
+							intent={"neutral"}
 							loading
 							onPressedChange={(v) => console.log("toggled to", v)}
 							effect={"fill"}
@@ -588,9 +1010,21 @@ export default function TogglePage() {
 						</Toggle>
 						Loading
 					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							appearance="solid"
+							intent={"neutral"}
+							loading
+							disabled
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+						Disabled & Loading
+					</div>
 				</div>
 			</div>
-			<div className="mb-20 flex gap-16d flex-wrap items-center"></div>
 		</div>
 	);
 }
