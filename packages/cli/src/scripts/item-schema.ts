@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { registryItemSchema } from "../registry/schema.js";
+import { registryItemSchema } from "../schema/schema.js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { writeFileSync } from "node:fs";
