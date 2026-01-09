@@ -2,9 +2,8 @@ import inquirer from "inquirer";
 import path from "node:path";
 import { registryFileFilesSchema, registryFileSchema, registryItemSchema, type RegistryFileFilesSchema, type RegistryFileSchema, type RegistryItemSchema } from "../schema/schema.js";
 import { installDepsIfMissing } from "./registry/deps.js";
-import { existsSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { readFile } from "node:fs/promises";
-import { jsonParse } from "../utils/strings/json-parse.js";
 import z from "zod/v4";
 
 const UI_REGISTRY_URL = "https://smoothed.vercel.app/registry";
@@ -19,8 +18,7 @@ const getLocalRegistryEntry = async (dirname: string, filename: string) => {
 const getRemoteRegistryFile = async (url: string) => {
 	const response = await fetch(url);
 	const data = await response.json();
-	const obj = JSON.parse(data);
-	return registryFileSchema.parse(obj);
+	return registryFileSchema.parse(data);
 };
 
 const resolveLocalRegistryEntry =
@@ -40,7 +38,7 @@ const resolveLocalRegistryEntry =
 
 const resolveRemoteRegistryEntry =
 	async (url: string, handled = new Set<string>()): Promise<RegistryFileSchema[]> => {
-		const baseUrl = url.split(/(.+\/)[a-z]+\.json$/)[1];
+		const baseUrl = url.split(/(.+\/).+.json$/)[1];
 		if (!baseUrl) throw new Error(`Invalid URL ${url}`);
 		if (handled.has(url)) return [];
 		handled.add(url);
@@ -48,7 +46,7 @@ const resolveRemoteRegistryEntry =
 		const entry = await getRemoteRegistryFile(url);
 		if (entry.regDeps?.length) {
 			for (const dep of entry.regDeps) {
-				const entry = await resolveRemoteRegistryEntry(`${baseUrl}${dep}`, handled);
+				const entry = await resolveRemoteRegistryEntry(`${baseUrl}${dep}.json`, handled);
 				deps.push(...entry);
 			}
 		}
@@ -60,9 +58,11 @@ const installRegistryFileContents = (files: RegistryFileFilesSchema, cwd: string
 	if (!parsedFiles.success) throw new Error('Invalid object structure');
 	for (const file of parsedFiles.data) {
 		if (existsSync(file.path)) continue;
-		const { left, right } = jsonParse(file.content);
-		if (left) throw new Error('Invalid JSON content');
-		writeFileSync(path.join(cwd, file.path), right);
+		const dir = file.path.split(/^(.+)\/.+$/)[1];
+		if (dir) {
+			mkdirSync(path.join(cwd, dir), {recursive: true});
+			writeFileSync(path.join(cwd, file.path), file.content);
+		}
 	}
 };
 
