@@ -1,7 +1,7 @@
 {
   "name": "success-icon",
   "regDeps": [
-    "icon-props"
+    "icon-types"
   ],
   "files": [
     {

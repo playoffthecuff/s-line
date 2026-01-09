@@ -1,0 +1,16 @@
+{
+  "name": "intent-message",
+  "regDeps": [
+    "icon-types",
+    "cn"
+  ],
+  "pkgDeps": [
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "src/components/ui/intent-message/intent-message.tsx",
+      "content": "import { cva, type VariantProps } from \"class-variance-authority\";\nimport type { IconProps } from \"../icons/types\";\nimport { cn } from \"@/lib/utils/cn\";\n\nexport const intentMessageVariants = cva(\n\t\"h-[1.5em] flex items-center gap-[0.5ch]\",\n\t{\n\t\tvariants: {\n\t\t\tintent: {\n\t\t\t\tsuccess: \"text-success [&&]-selection:surface-success-solid\",\n\t\t\t\terror: \"text-error [&&]-selection:surface-error-solid\",\n\t\t\t\twarning: \"text-warning [&&]-selection:surface-warning-solid\",\n\t\t\t\tprimary: \"text-primary [&&]-selection:surface-primary-solid\",\n\t\t\t\tsecondary: \"text-secondary [&&]-selection:surface-secondary-solid\",\n\t\t\t\tvisited: \"text-visited [&&]-selection:surface-visited-solid\",\n\t\t\t},\n\t\t\tsize: {\n\t\t\t\ts: \"text-3d font-10d\",\n\t\t\t\tm: \"text-4d font-9d\",\n\t\t\t\tl: \"text-5d font-8d\",\n\t\t\t},\n\t\t},\n\t\tdefaultVariants: {\n\t\t\tsize: \"m\",\n\t\t\tintent: \"secondary\",\n\t\t},\n\t},\n);\n\nconst intentToColors = {\n\tprimary: \"primary\",\n\tsecondary: \"secondary\",\n\tneutral: \"foreground\",\n\terror: \"error\",\n\twarning: \"warning\",\n\tsuccess: \"success\",\n\tvisited: \"visited\",\n} as const;\n\nexport function IntentMessage({\n\tintent,\n\tsize,\n\tclassName,\n\tchildren,\n\ticonStart: IconStart,\n\ticonEnd: IconEnd,\n\t...props\n}: React.ComponentProps<\"p\"> &\n\tVariantProps<typeof intentMessageVariants> & {\n\t\ticonStart?: React.ComponentType<IconProps>;\n\t\ticonEnd?: React.ComponentType<IconProps>;\n\t}) {\n\tconst intentColor =\n\t\tintentToColors[(intent ?? \"secondary\") as keyof typeof intentToColors];\n\treturn (\n\t\t<p\n\t\t\tclassName={cn(intentMessageVariants({ intent, size }), className)}\n\t\t\t{...props}\n\t\t>\n\t\t\t{IconStart && (\n\t\t\t\t<IconStart\n\t\t\t\t\tsize=\"1em\"\n\t\t\t\t\tfill=\"currentColor\"\n\t\t\t\t\tclassName={`fill-${intentColor}-d`}\n\t\t\t\t/>\n\t\t\t)}\n\t\t\t{children}\n\t\t\t{IconEnd && <IconEnd size=\"1em\" fill=\"currentColor\" className={`fill-${intentColor}-d`} />}\n\t\t</p>\n\t);\n}\n"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "warning-icon",
   "regDeps": [
-    "icon-props"
+    "icon-types"
   ],
   "files": [
     {

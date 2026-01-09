@@ -1,7 +1,7 @@
 {
   "name": "triangle-up-sharp-icon",
   "regDeps": [
-    "icon-props"
+    "icon-types"
   ],
   "files": [
     {

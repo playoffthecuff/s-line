@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import clsx from "clsx";
 import type { IconProps } from "../icons/types";
+import { cn } from "@/lib/utils/cn";
 
 export const intentMessageVariants = cva(
 	"h-[1.5em] flex items-center gap-[0.5ch]",
@@ -54,7 +54,7 @@ export function IntentMessage({
 		intentToColors[(intent ?? "secondary") as keyof typeof intentToColors];
 	return (
 		<p
-			className={clsx(intentMessageVariants({ intent, size }), className)}
+			className={cn(intentMessageVariants({ intent, size }), className)}
 			{...props}
 		>
 			{IconStart && (

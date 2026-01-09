@@ -23,26 +23,6 @@
 			]
 		},
 		{
-			"name": "number-input",
-			"pkgDeps": ["class-variance-authority"],
-			"regDeps": ["spinner-icon", "triangle-down-rounded-icon", "triangle-down-sharp-icon", "cn"],
-			"files": [
-				{
-					"path":"src/components/ui/input/number.tsx"
-				}
-			]
-		},
-		{
-			"name": "text-input",
-			"pkgDeps": ["class-variance-authority"],
-			"regDeps": ["spinner-icon", "eye-close-icon", "eye-open-icon", "cn"],
-			"files": [
-				{
-					"path":"src/components/ui/input/text.tsx"
-				}
-			]
-		},
-		{
 			"name": "checkbox-field",
 			"pkgDeps": ["class-variance-authority"],
 			"regDeps": ["checkbox", "cn", "error-icon", "success-icon", "warning-icon", "intent-message", "label", "hint-button"],
@@ -99,17 +79,8 @@
 			]
 		},
 		{
-			"name": "chevron-up-down-icon",
-			"regDeps": ["icon-props"],
-			"files": [
-				{
-					"path":"src/components/ui/icons/chevron-up-down.tsx"
-				}
-			]
-		},
-		{
 			"name": "error-icon",
-			"regDeps": ["icon-props"],
+			"regDeps": ["icon-types"],
 			"files": [
 				{
 					"path":"src/components/ui/icons/error.tsx"
@@ -118,7 +89,7 @@
 		},
 		{
 			"name": "eye-close-icon",
-			"regDeps": ["icon-props"],
+			"regDeps": ["icon-types"],
 			"files": [
 				{
 					"path":"src/components/ui/icons/eye-close.tsx"
@@ -127,7 +98,7 @@
 		},
 		{
 			"name": "eye-open-icon",
-			"regDeps": ["icon-props"],
+			"regDeps": ["icon-types"],
 			"files": [
 				{
 					"path":"src/components/ui/icons/eye-open.tsx"
@@ -144,7 +115,7 @@
 		},
 		{
 			"name": "success-icon",
-			"regDeps": ["icon-props"],
+			"regDeps": ["icon-types"],
 			"files": [
 				{
 					"path":"src/components/ui/icons/success.tsx"
@@ -153,7 +124,7 @@
 		},
 		{
 			"name": "triangle-down-rounded-icon",
-			"regDeps": ["icon-props"],
+			"regDeps": ["icon-types"],
 			"files": [
 				{
 					"path":"src/components/ui/icons/triangle-down-rounded.tsx"
@@ -162,7 +133,7 @@
 		},
 		{
 			"name": "triangle-down-sharp-icon",
-			"regDeps": ["icon-props"],
+			"regDeps": ["icon-types"],
 			"files": [
 				{
 					"path":"src/components/ui/icons/triangle-down-sharp.tsx"
@@ -171,7 +142,7 @@
 		},
 		{
 			"name": "triangle-up-rounded-icon",
-			"regDeps": ["icon-props"],
+			"regDeps": ["icon-types"],
 			"files": [
 				{
 					"path":"src/components/ui/icons/triangle-up-rounded.tsx"
@@ -180,7 +151,7 @@
 		},
 		{
 			"name": "triangle-up-sharp-icon",
-			"regDeps": ["icon-props"],
+			"regDeps": ["icon-types"],
 			"files": [
 				{
 					"path":"src/components/ui/icons/triangle-up-sharp.tsx"
@@ -189,10 +160,132 @@
 		},
 		{
 			"name": "warning-icon",
-			"regDeps": ["icon-props"],
+			"regDeps": ["icon-types"],
 			"files": [
 				{
 					"path":"src/components/ui/icons/warning.tsx"
+				}
+			]
+		},
+		{
+			"name": "chevron-up-down-icon",
+			"regDeps": ["icon-types"],
+			"files": [
+				{
+					"path":"src/components/ui/icons/chevron-up-down.tsx"
+				}
+			]
+		},
+		{
+			"name": "icon-types",
+			"files": [
+				{
+					"path":"src/components/ui/icons/types.ts"
+				}
+			]
+		},
+		{
+			"name": "number-input",
+			"pkgDeps": ["class-variance-authority"],
+			"regDeps": ["spinner-icon", "triangle-down-rounded-icon", "triangle-down-sharp-icon", "cn"],
+			"files": [
+				{
+					"path":"src/components/ui/input/number.tsx"
+				}
+			]
+		},
+		{
+			"name": "text-input",
+			"pkgDeps": ["class-variance-authority"],
+			"regDeps": ["spinner-icon", "eye-close-icon", "eye-open-icon", "cn"],
+			"files": [
+				{
+					"path":"src/components/ui/input/text.tsx"
+				}
+			]
+		},
+		{
+			"name": "intent-message",
+			"pkgDeps": ["class-variance-authority"],
+			"regDeps": ["icon-types", "cn"],
+			"files": [
+				{
+					"path":"src/components/ui/intent-message/intent-message.tsx"
+				}
+			]
+		},
+		{
+			"name": "label",
+			"pkgDeps": ["class-variance-authority"],
+			"regDeps": ["cn"],
+			"files": [
+				{
+					"path":"src/components/ui/label/label.tsx"
+				}
+			]
+		},
+		{
+			"name": "next-link",
+			"files": [
+				{
+					"path":"src/components/ui/link/link.tsx"
+				}
+			]
+		},
+		{
+			"name": "popover",
+			"pkgDeps": ["class-variance-authority"],
+			"files": [
+				{
+					"path":"src/components/ui/popover/popover.tsx"
+				}
+			]
+		},
+		{
+			"name": "select",
+			"pkgDeps": ["class-variance-authority"],
+			"regDeps": ["spinner-icon", "check-icon", "cn", "chevron-up-down-icon"],
+			"files": [
+				{
+					"path":"src/components/ui/select/select.tsx"
+				}
+			]
+		},
+		{
+			"name": "slider",
+			"pkgDeps": ["class-variance-authority"],
+			"regDeps": ["spinner-icon", "cn"],
+			"files": [
+				{
+					"path":"src/components/ui/slider/slider.tsx"
+				}
+			]
+		},
+		{
+			"name": "toggle",
+			"pkgDeps": ["class-variance-authority"],
+			"regDeps": ["spinner-icon", "cn", "use-wave-animate"],
+			"files": [
+				{
+					"path":"src/components/ui/toggle/toggle.tsx"
+				}
+			]
+		},
+		{
+			"name": "title",
+			"pkgDeps": ["class-variance-authority"],
+			"regDeps": ["cn"],
+			"files": [
+				{
+					"path":"src/components/ui/typography/title.tsx"
+				}
+			]
+		},
+		{
+			"name": "use-wave-animate",
+			"files": [
+				{
+					"path":"src/components/ui/use-wave-animate.ts"
 				}
 			]
 		},
@@ -202,14 +295,6 @@
 			"files": [
 				{
 					"path":"src/lib/utils/cn.ts"
-				}
-			]
-		},
-		{
-			"name": "use-wave-animate",
-			"files": [
-				{
-					"path":"src/components/ui/use-wave-animate.ts"
 				}
 			]
 		}

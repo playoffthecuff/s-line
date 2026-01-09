@@ -1,5 +1,5 @@
+import { cn } from "@/lib/utils/cn";
 import { cva, type VariantProps } from "class-variance-authority";
-import clsx from "clsx";
 
 const headingVariants = cva("font-11d", {
 	variants: {
@@ -22,22 +22,22 @@ type Props = React.ComponentProps<"h1"> & VariantProps<typeof headingVariants>;
 export function Title({ size, children, className, ...props }: Props) {
 	switch (size) {
 		case 2: {
-			return <h2 className={clsx(headingVariants({ size }), className)} {...props}>{children}</h2>;
+			return <h2 className={cn(headingVariants({ size }), className)} {...props}>{children}</h2>;
 		}
 		case 3: {
-			return <h3 className={clsx(headingVariants({ size }), className)} {...props}>{children}</h3>;
+			return <h3 className={cn(headingVariants({ size }), className)} {...props}>{children}</h3>;
 		}
 		case 4: {
-			return <h4 className={clsx(headingVariants({ size }), className)} {...props}>{children}</h4>;
+			return <h4 className={cn(headingVariants({ size }), className)} {...props}>{children}</h4>;
 		}
 		case 5: {
-			return <h5 className={clsx(headingVariants({ size }), className)} {...props}>{children}</h5>;
+			return <h5 className={cn(headingVariants({ size }), className)} {...props}>{children}</h5>;
 		}
 		case 6: {
-			return <h6 className={clsx(headingVariants({ size }), className)} {...props}>{children}</h6>;
+			return <h6 className={cn(headingVariants({ size }), className)} {...props}>{children}</h6>;
 		}
 		default: {
-			return <h1 className={clsx(headingVariants({ size }), className)} {...props}>{children}</h1>;
+			return <h1 className={cn(headingVariants({ size }), className)} {...props}>{children}</h1>;
 		}
 	}
 }

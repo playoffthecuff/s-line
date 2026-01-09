@@ -2,9 +2,9 @@
 
 import { Toggle as BaseToggle } from "@base-ui/react/toggle";
 import { cva, type VariantProps } from "class-variance-authority";
-import clsx from "clsx/lite";
 import { SpinnerIcon } from "@/components/ui/icons/spinner";
 import { useWaveAnimate } from "@/components/ui/use-wave-animate";
+import { cn } from "@/lib/utils/cn";
 
 const toggleVariants = cva(
 	"inline-flex h-[2em] min-w-[2em] px-[calc(0.375em-2px)] items-center justify-center whitespace-nowrap transition-all [&_svg]:pointer-events-none cursor-pointer relative select-none before:absolute before:inset-0 before:block before:outline-0 before:content-[''] outline-none",
@@ -375,7 +375,7 @@ export function Toggle({
 			<BaseToggle
 				ref={effects.ref}
 				data-slot="button"
-				className={clsx(
+				className={cn(
 					toggleVariants({
 						intent,
 						size,

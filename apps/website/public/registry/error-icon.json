@@ -1,7 +1,7 @@
 {
   "name": "error-icon",
   "regDeps": [
-    "icon-props"
+    "icon-types"
   ],
   "files": [
     {

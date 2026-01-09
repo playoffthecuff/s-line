@@ -1,10 +1,10 @@
 "use client";
 import { Slider } from "@base-ui/react/slider";
-import clsx from "clsx/lite";
 import { useState } from "react";
 import { type ColorSpace, findMaxChromaForHue } from "@/lib/utils/colors";
 import { NumberField } from "../fields/s/number";
 import css from "./slider.module.css";
+import { cn } from "@/lib/utils/cn";
 
 interface Props {
 	initialValue: number;
@@ -28,7 +28,7 @@ export function OklchSlider({
 			<Slider.Root min={0} max={359} value={value} onValueChange={handleChange}>
 				<Slider.Control className="flex w-56 touch-none items-center py-2 select-none cursor-pointer">
 					<Slider.Track
-						className={clsx(
+						className={cn(
 							"h-2 w-full rounded select-none outline outline-1 outline-gray-fg",
 							css["oklch-gradient"],
 						)}

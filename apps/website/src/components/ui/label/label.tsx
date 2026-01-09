@@ -1,5 +1,5 @@
+import { cn } from "@/lib/utils/cn";
 import { cva, type VariantProps } from "class-variance-authority";
-import clsx from "clsx";
 
 export const labelVariants = cva(
 	"h-[1.5em] flex items-center gap-[0.5ch]",
@@ -76,7 +76,7 @@ export function Label({
 	VariantProps<typeof labelVariants>) {
 	return (
 		<label
-			className={clsx(labelVariants({ intent, size, required }), className)}
+			className={cn(labelVariants({ intent, size, required }), className)}
 			htmlFor={htmlFor}
 			{...props}
 		>

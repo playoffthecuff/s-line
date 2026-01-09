@@ -1,7 +1,7 @@
 {
   "name": "eye-close-icon",
   "regDeps": [
-    "icon-props"
+    "icon-types"
   ],
   "files": [
     {

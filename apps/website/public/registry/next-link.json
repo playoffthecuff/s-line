@@ -1,0 +1,9 @@
+{
+  "name": "next-link",
+  "files": [
+    {
+      "path": "src/components/ui/link/link.tsx",
+      "content": "import NextLink, { type LinkProps } from \"next/link\";\n\nexport function Link({\n\tchildren,\n\t...linkProps\n}: LinkProps & { children: React.ReactNode }) {\n\treturn (\n\t\t<NextLink\n\t\t\t{...linkProps}\n\t\t\tclassName=\"text-primary-ia underline visited:text-visited-ia w-fit\"\n\t\t>\n\t\t\t{children}\n\t\t</NextLink>\n\t);\n}\n"
+    }
+  ]
+}

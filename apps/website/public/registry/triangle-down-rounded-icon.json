@@ -1,7 +1,7 @@
 {
   "name": "triangle-down-rounded-icon",
   "regDeps": [
-    "icon-props"
+    "icon-types"
   ],
   "files": [
     {

@@ -1,0 +1,15 @@
+{
+  "name": "label",
+  "regDeps": [
+    "cn"
+  ],
+  "pkgDeps": [
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "src/components/ui/label/label.tsx",
+      "content": "import { cn } from \"@/lib/utils/cn\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nexport const labelVariants = cva(\n\t\"h-[1.5em] flex items-center gap-[0.5ch]\",\n\t{\n\t\tvariants: {\n\t\t\tintent: {\n\t\t\t\tneutral: \"[&&]-selection:surface-foreground-solid\",\n\t\t\t\tsuccess: \"text-success selection:surface-success-solid\",\n\t\t\t\terror: \"text-error [&&]-selection:surface-error-solid\",\n\t\t\t\twarning: \"text-warning selection:surface-warning-solid\",\n\t\t\t\tprimary: \"text-primary selection:surface-primary-solid\",\n\t\t\t\tsecondary: \"text-secondary selection:surface-secondary-solid\",\n\t\t\t},\n\t\t\tsize: {\n\t\t\t\ts: \"text-3d font-10d\",\n\t\t\t\tm: \"text-4d font-9d\",\n\t\t\t\tl: \"text-5d font-8d\",\n\t\t\t},\n\t\t\trequired: {\n\t\t\t\ttrue: \"before:content-['✺']\",\n\t\t\t\tfalse: null,\n\t\t\t}\n\t\t},\n\t\tcompoundVariants: [\n\t\t\t{\n\t\t\t\tintent: \"error\",\n\t\t\t\trequired: true,\n\t\t\t\tclassName: \"before:text-error-478d dark:before:text-error-740d\",\n\t\t\t},\n\t\t\t{\n\t\t\t\tintent: \"primary\",\n\t\t\t\trequired: true,\n\t\t\t\tclassName: \"before:text-primary-488d dark:before:text-primary-722d\",\n\t\t\t},\n\t\t\t{\n\t\t\t\tintent: \"secondary\",\n\t\t\t\trequired: true,\n\t\t\t\tclassName: \"before:text-secondary-450d dark:before:text-secondary-720d\",\n\t\t\t},\n\t\t\t{\n\t\t\t\tintent: \"success\",\n\t\t\t\trequired: true,\n\t\t\t\tclassName: \"before:text-success-440d dark:before:text-success-700d\",\n\t\t\t},\n\t\t\t{\n\t\t\t\tintent: \"warning\",\n\t\t\t\trequired: true,\n\t\t\t\tclassName: \"before:text-warning-455d dark:before:text-warning-760d\",\n\t\t\t},\n\t\t\t{\n\t\t\t\tintent: \"neutral\",\n\t\t\t\trequired: true,\n\t\t\t\tclassName: \"before:text-error-478d dark:before:text-error-740d\",\n\t\t\t},\n\n\t\t],\n\t\tdefaultVariants: {\n\t\t\tsize: \"m\",\n\t\t\trequired: false,\n\t\t\tintent: \"neutral\",\n\t\t},\n\t},\n);\n\nexport function Label({\n\tintent,\n\tsize,\n\tclassName,\n\tchildren,\n\thtmlFor,\n\trequired,\n\t...props\n}: React.ComponentProps<\"label\"> &\n\tVariantProps<typeof labelVariants>) {\n\treturn (\n\t\t<label\n\t\t\tclassName={cn(labelVariants({ intent, size, required }), className)}\n\t\t\thtmlFor={htmlFor}\n\t\t\t{...props}\n\t\t>\n\t\t\t{children}\n\t\t</label>\n\t);\n}\n"
+    }
+  ]
+}
