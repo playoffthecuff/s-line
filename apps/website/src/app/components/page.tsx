@@ -22,6 +22,7 @@ export default function ComponentsPage() {
 			<Link href={"/components/checkbox-field"}>Checkbox Field</Link>
 			<Link href={"/components/select-field"}>Select Field</Link>
 			<Link href={"/components/slider-field"}>Slider Field</Link>
+			<Link href={"/components/icons"}>Icons</Link>
 		</div>
 	);
 }
