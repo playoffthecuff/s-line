@@ -4,7 +4,7 @@ export function CopyIcon({
 	strokeWidth = 2,
 	copied = false,
 	...props
-}: IconProps & { copied: boolean }) {
+}: IconProps & { copied?: boolean }) {
 	return (
 		<svg
 			width={size}
