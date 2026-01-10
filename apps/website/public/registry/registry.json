@@ -157,6 +157,15 @@
 			]
 		},
 		{
+			"name": "copy-icon",
+			"regDeps": ["icon-types"],
+			"files": [
+				{
+					"path": "src/components/ui/icons/copy.tsx"
+				}
+			]
+		},
+		{
 			"name": "dislike-icon",
 			"regDeps": ["icon-types"],
 			"files": [
@@ -268,6 +277,14 @@
 			"files": [
 				{
 					"path": "src/components/ui/icons/smartphone.tsx"
+				}
+			]
+		},
+		{
+			"name": "signin-icon",
+			"files": [
+				{
+					"path": "src/components/ui/icons/sign-in.tsx"
 				}
 			]
 		},

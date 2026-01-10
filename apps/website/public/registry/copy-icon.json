@@ -1,0 +1,11 @@
+{
+	"name": "copy-icon",
+	"regDeps": ["icon-types"],
+	"files": [
+		{
+			"path": "src/components/ui/icons/copy.tsx",
+			"content": "import type { IconProps } from \"./types\";\nexport function CopyIcon({\n\tsize = \"1.25em\",\n\tstrokeWidth = 2,\n\tcopied = false,\n\t...props\n}: IconProps & { copied?: boolean }) {\n\treturn (\n\t\t<svg\n\t\t\twidth={size}\n\t\t\theight={size}\n\t\t\tviewBox=\"0 0 24 24\"\n\t\t\tfill=\"none\"\n\t\t\tstroke=\"currentColor\"\n\t\t\tstrokeWidth={strokeWidth}\n\t\t\txmlns=\"http://www.w3.org/2000/svg\"\n\t\t\t{...props}\n\t\t>\n\t\t\t<path d=\"M6 18H5C3.34315 18 2 16.6569 2 15V5C2 3.34315 3.34315 2 5 2H15C16.6569 2 18 3.34315 18 5V6\" />\n\t\t\t<path d=\"M19 6H9C7.34315 6 6 7.34315 6 9V19C6 20.6569 7.34315 22 9 22H19C20.6569 22 22 20.6569 22 19V9C22 7.34315 20.6569 6 19 6Z\" />\n\t\t\t<g className={copied ? \"\" : \"hidden\"}>\n\t\t\t\t<path d=\"M10 13.5L13 16.5\" strokeLinecap=\"round\" />\n\t\t\t\t<path d=\"M13 16.5L18 11.5\" strokeLinecap=\"round\" />\n\t\t\t</g>\n\t\t</svg>\n\t);\n}\n"
+		}
+	],
+	"$schema": "https://smoothed.vercel.app/item-schema.json"
+}
