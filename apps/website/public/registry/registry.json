@@ -124,7 +124,7 @@
 			"regDeps": ["button", "info-icon", "popover"],
 			"files": [
 				{
-					"path": "src/components/ui/fields/text.tsx"
+					"path": "src/components/ui/fields/hint-button.tsx"
 				}
 			]
 		},
