@@ -23,6 +23,7 @@ export default function ComponentsPage() {
 			<Link href={"/components/select-field"}>Select Field</Link>
 			<Link href={"/components/slider-field"}>Slider Field</Link>
 			<Link href={"/components/icons"}>Icons</Link>
+			<Link href={"/components/card"}>Card</Link>
 		</div>
 	);
 }
