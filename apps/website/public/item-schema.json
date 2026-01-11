@@ -6,15 +6,14 @@
 		"regDeps": { "type": "array", "items": { "type": "string" } },
 		"pkgDeps": { "type": "array", "items": { "type": "string" } },
 		"files": {
-			"minItems": 1,
 			"type": "array",
 			"items": {
 				"type": "object",
 				"properties": {
 					"path": { "type": "string" },
-					"target": { "type": "string" }
+					"content": { "type": "string" }
 				},
-				"required": ["path"],
+				"required": ["path", "content"],
 				"additionalProperties": false
 			}
 		},
