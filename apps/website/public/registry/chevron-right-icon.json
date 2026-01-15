@@ -1,0 +1,11 @@
+{
+	"name": "chevron-right-icon",
+	"regDeps": ["icon-types"],
+	"files": [
+		{
+			"path": "src/components/ui/icons/chevron-right.tsx",
+			"content": "import type { IconProps } from \"./types\";\n\nexport function ChevronRightIcon({\n  size = \"1.25em\",\n  strokeWidth = 2,\n  className,\n}: IconProps) {\n  return (\n    <svg\n      width={size}\n      height={size}\n      viewBox=\"0 0 24 24\"\n      fill=\"none\"\n      xmlns=\"http://www.w3.org/2000/svg\"\n      strokeWidth={strokeWidth}\n      strokeLinecap=\"round\"\n      stroke=\"currentColor\"\n      className={className}\n    >\n      <path d=\"M15.5 12L8.5 5\" />\n      <path d=\"M15.5 12L8.5 19\" />\n    </svg>\n  );\n}\n"
+		}
+	],
+	"$schema": "https://smoothed.vercel.app/item-schema.json"
+}
