@@ -129,6 +129,15 @@
 			]
 		},
 		{
+			"name": "calendar-icon",
+			"regDeps": ["icon-types"],
+			"files": [
+				{
+					"path": "src/components/ui/icons/calendar.tsx"
+				}
+			]
+		},
+		{
 			"name": "check-icon",
 			"regDeps": ["icon-types"],
 			"files": [
