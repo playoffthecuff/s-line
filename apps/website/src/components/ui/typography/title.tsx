@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils/cn";
 import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils/cn";
 
 const headingVariants = cva("font-11d", {
 	variants: {
@@ -17,9 +17,10 @@ const headingVariants = cva("font-11d", {
 	},
 });
 
-type Props = React.ComponentProps<"h1"> & VariantProps<typeof headingVariants>;
+export type TitleProps = React.ComponentProps<"h1"> &
+	VariantProps<typeof headingVariants>;
 
-export function Title({ size, children, className, ...props }: Props) {
+export function Title({ size, children, className, ...props }: TitleProps) {
 	switch (size) {
 		case 2: {
 			return (

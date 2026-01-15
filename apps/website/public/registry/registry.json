@@ -15,6 +15,7 @@
 		},
 		{
 			"name": "card",
+			"regDeps": ["title", "cn"],
 			"files": [
 				{
 					"path": "src/components/ui/card/card.tsx"

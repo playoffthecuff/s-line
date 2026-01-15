@@ -26,15 +26,20 @@ export default function CardPage() {
 			<Title size={2}>Variants:</Title>
 			<div className="max-w-60">
 				<Card>
-					<Title size={3}>Title</Title>
-					<p className="text-muted font-10d">Description</p>
-					<hr className="text-muted opacity-64 my-12d" />
-					<p>
-						Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti
-						officia cupiditate similique quam ipsa aliquid, commodi
-						necessitatibus explicabo enim ipsam tempora adipisci facilis ad
-						eligendi soluta repudiandae dolorum est fuga!
-					</p>
+					<Card.Header className="p-16d">
+						<Card.Title>Title</Card.Title>
+						<Card.Description>Description</Card.Description>
+					</Card.Header>
+					<hr className="text-muted opacity-64 mb-12d" />
+					<Card.Content>
+						<p>
+							Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti
+							officia cupiditate similique quam ipsa aliquid, commodi
+							necessitatibus explicabo enim ipsam tempora adipisci facilis ad
+							eligendi soluta repudiandae dolorum est fuga!
+						</p>
+					</Card.Content>
+					<Card.Footer className="py-16d">Footer</Card.Footer>
 				</Card>
 			</div>
 		</div>

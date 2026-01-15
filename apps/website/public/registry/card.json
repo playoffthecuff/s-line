@@ -1,9 +1,10 @@
 {
 	"name": "card",
+	"regDeps": ["title", "cn"],
 	"files": [
 		{
 			"path": "src/components/ui/card/card.tsx",
-			"content": "import { ReactNode } from \"react\";\n\ninterface Props {\n\tchildren: ReactNode;\n}\n\nexport function Card({ children }: Props) {\n\treturn (\n\t\t<div className=\"px-16d py-14d bg-3 rounded-12d shadow-lifted-2\">\n\t\t\t{children}\n\t\t</div>\n\t);\n}\n"
+			"content": "import type { ReactNode } from \"react\";\nimport { cn } from \"@/lib/utils/cn\";\nimport { Title, type TitleProps } from \"../typography/title\";\n\ninterface Props {\n\tchildren: ReactNode;\n\tclassName?: string;\n}\n\nexport function Card({ children, className }: Props) {\n\treturn (\n\t\t<article\n\t\t\tdata-slot=\"card\"\n\t\t\tclassName={cn(\n\t\t\t\t\"flex flex-col gap-12d bg-2 rounded-12d shadow-lifted-2 overflow-hidden\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t>\n\t\t\t{children}\n\t\t</article>\n\t);\n}\n\nCard.Header = ({ children, className }: Props) => (\n\t<header\n\t\tdata-slot=\"card-header\"\n\t\tclassName={cn(\"flex items-center gap-16d\", className)}\n\t>\n\t\t{children}\n\t</header>\n);\n\nCard.Title = ({ children, className, ...props }: Props & TitleProps) => (\n\t<Title data-slot=\"card-title\" className={cn(\"\", className)} {...props}>\n\t\t{children}\n\t</Title>\n);\n\nCard.Description = ({ children, className }: Props) => (\n\t<p data-slot=\"card-description\" className={cn(\"text-muted-1\", className)}>\n\t\t{children}\n\t</p>\n);\n\nCard.Content = ({ children, className }: Props) => (\n\t<p data-slot=\"card-content\" className={cn(\"px-16d\", className)}>\n\t\t{children}\n\t</p>\n);\n\nCard.Footer = ({ children, className }: Props) => (\n\t<footer data-slot=\"card-footer\" className={cn(\"px-16d\", className)}>\n\t\t{children}\n\t</footer>\n);\n"
 		}
 	],
 	"$schema": "https://smoothed.vercel.app/item-schema.json"
