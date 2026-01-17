@@ -157,6 +157,25 @@
 			]
 		},
 		{
+			"name": "chevron-left-icon",
+			"regDeps": ["icon-types"],
+			"files": [
+				{
+					"path": "src/components/ui/icons/chevron-left.tsx"
+				}
+			]
+		},
+		{
+			"name": "chevron-right-icon",
+			"regDeps": ["icon-types"],
+			"files": [
+				{
+					"path": "src/components/ui/icons/chevron-right.tsx"
+				}
+			]
+		},
+
+		{
 			"name": "chevron-up-icon",
 			"regDeps": ["icon-types"],
 			"files": [
