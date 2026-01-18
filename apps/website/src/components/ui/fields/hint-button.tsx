@@ -1,14 +1,16 @@
 import { cva } from "class-variance-authority";
-import { Button } from "../button/button";
+import { Button, type ButtonProps } from "../button/button";
 import { InfoIcon } from "../icons/info";
-import { Popover, type PopoverProps } from "../popover/popover";
+import { Popover, type PopoverPortalProps } from "../popover/popover";
 
 const hintButtonVariants = cva("[&&]-cursor-help", {
 	variants: {
 		size: {
+			xs: "text-3d p-6d",
 			s: "text-3d p-6d",
 			m: "text-4d p-7d",
 			l: "text-5d p-8d",
+			xl: "text-6d p-9d",
 		},
 	},
 	defaultVariants: {
@@ -16,22 +18,31 @@ const hintButtonVariants = cva("[&&]-cursor-help", {
 	},
 });
 
-type Props = Omit<PopoverProps, "children">;
+export type HintButtonProps = PopoverPortalProps & ButtonProps;
 
-export function HintButton({ size, ...props }: Props) {
+export function HintButton({ size, children, ...props }: HintButtonProps) {
 	return (
-		<Popover {...props} size={size}>
-			<Button
-				shape={"circular"}
-				size="fit"
-				width={"narrow"}
-				animated={false}
-				intent={"primary"}
-				appearance={"ghost"}
-				className={hintButtonVariants({ size })}
-			>
-				<InfoIcon fill={"currentColor"} size="1em" className="fill-primary-d" />
-			</Button>
+		<Popover {...props}>
+			<Popover.Trigger>
+				<Button
+					shape={"circular"}
+					size={size}
+					width={"narrow"}
+					animated={false}
+					intent={"primary"}
+					appearance={"ghost"}
+					className={hintButtonVariants({ size })}
+				>
+					<InfoIcon
+						fill={"currentColor"}
+						size="1em"
+						className="fill-primary-d"
+					/>
+				</Button>
+			</Popover.Trigger>
+			<Popover.Portal size={size} {...props}>
+				{children}
+			</Popover.Portal>
 		</Popover>
 	);
 }
