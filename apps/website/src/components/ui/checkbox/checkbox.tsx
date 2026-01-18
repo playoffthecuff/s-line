@@ -14,7 +14,7 @@ const wrapperVariants = cva("flex items-center justify-center", {
 });
 
 const checkboxVariants = cva(
-	"flex h-[2.5em] w-[2.5em] rounded-full items-center justify-center before:content-[''] transition-all before:absolute outline-0 invalid:focus-visible:shadow-focus-error aria-[required]:aria-[checked=false]:surface-error-ghost-ia aria-[required]:aria-[checked=false]:before:border-error",
+	"flex rounded-full items-center justify-center before:content-[''] transition-all before:absolute outline-0 invalid:focus-visible:shadow-focus-error aria-[required]:aria-[checked=false]:surface-error-ghost-ia aria-[required]:aria-[checked=false]:before:border-error",
 	{
 		variants: {
 			status: {
@@ -27,15 +27,16 @@ const checkboxVariants = cva(
 			},
 			shape: {
 				square: "before:w-[1.25em] before:h-[1.25em] before:border-[0.125em]",
-				rounded:
-					"before:rounded-7d before:w-[1.25em] before:h-[1.25em] before:border-[0.125em]",
+				rounded: "before:w-[1.25em] before:h-[1.25em] before:border-[0.125em]",
 				circular:
 					"before:rounded-full before:w-[1.186em] before:h-[1.186em] before:border-[0.1186em]",
 			},
 			size: {
+				xs: "text-3d h-[2.1em] w-[2.1em]",
 				s: "text-3d",
 				m: "text-4d",
 				l: "text-5d",
+				xl: "text-6d",
 			},
 			disabled: {
 				true: "saturate-50 opacity-50 contrast-60 pointer-events-none",
@@ -50,13 +51,18 @@ const checkboxVariants = cva(
 			},
 		},
 		compoundVariants: [
+			{ size: ["l", "m", "s", "xl"], className: "h-[2.5em] w-[2.5em]" },
 			{ disabled: undefined, loading: undefined, className: "cursor-pointer" },
+			{ shape: "rounded", size: "xs", className: "before:rounded-4d" },
 			{ shape: "rounded", size: "s", className: "before:rounded-5d" },
 			{ shape: "rounded", size: "m", className: "before:rounded-7d" },
 			{ shape: "rounded", size: "l", className: "before:rounded-9d" },
+			{ shape: "rounded", size: "xl", className: "before:rounded-10d" },
+			{ shape: "circular", size: "xs", className: "before:text-3d" },
 			{ shape: "circular", size: "s", className: "before:text-4d" },
 			{ shape: "circular", size: "m", className: "before:text-5d" },
 			{ shape: "circular", size: "l", className: "before:text-6d" },
+			{ shape: "circular", size: "xl", className: "before:text-7d" },
 			{
 				status: undefined,
 				className:

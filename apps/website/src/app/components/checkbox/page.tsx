@@ -28,12 +28,16 @@ export default function CheckboxPage() {
 				<div className="flex flex-col gap-12d">
 					<Title size={3}>Size</Title>
 					<div className="grid grid-cols-[repeat(2,max-content)] items-center gap-x-12d">
+						<Checkbox size="xs" className="justify-self-center" />
+						Extra Small - XS
 						<Checkbox size="s" className="justify-self-center" />
 						Small - S
 						<Checkbox size="m" className="justify-self-center" />
 						Default - M
 						<Checkbox size="l" />
 						Large - L
+						<Checkbox size="xl" />
+						Extra Large - XL
 					</div>
 				</div>
 				<div className="flex flex-col gap-12d">
