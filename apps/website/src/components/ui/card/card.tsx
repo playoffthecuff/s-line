@@ -7,6 +7,7 @@ interface Props {
 	className?: string;
 }
 
+//TODO Add variants
 export function Card({ children, className }: Props) {
 	return (
 		<article
@@ -43,9 +44,9 @@ Card.Description = ({ children, className }: Props) => (
 );
 
 Card.Content = ({ children, className }: Props) => (
-	<p data-slot="card-content" className={cn("px-16d", className)}>
+	<div data-slot="card-content" className={cn("px-16d", className)}>
 		{children}
-	</p>
+	</div>
 );
 
 Card.Footer = ({ children, className }: Props) => (
