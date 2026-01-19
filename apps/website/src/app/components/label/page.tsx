@@ -2,7 +2,7 @@ import { HighlightedCode } from "@/components/ui/highlighted-code";
 import { Label } from "@/components/ui/label/label";
 import { Title } from "@/components/ui/typography/title";
 
-export default function InputPage() {
+export default function LabelPage() {
 	return (
 		<div
 			className="max-w-200 min-h-full bg-1 mx-auto p-18d flex flex-col gap-16d grow [&&]-pb-20"
@@ -27,9 +27,11 @@ export default function InputPage() {
 			<div className="flex flex-col gap-16d">
 				<div className="flex flex-col gap-4d">
 					<Title size={3}>Size</Title>
-					<Label size={"s"}>Size S</Label>
-					<Label size={"m"}>Size M</Label>
-					<Label size={"l"}>Size L</Label>
+					<Label size={"xs"}>Size Extra Small - XS</Label>
+					<Label size={"s"}>Size Small - S</Label>
+					<Label size={"m"}>Size Medium - M</Label>
+					<Label size={"l"}>Size Large - L</Label>
+					<Label size={"xl"}>Size Extra Large - XL</Label>
 				</div>
 				<div className="flex flex-col gap-4d">
 					<Title size={3}>Intent</Title>

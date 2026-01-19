@@ -1,20 +1,22 @@
-import { cn } from "@/lib/utils/cn";
 import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils/cn";
 
 export const labelVariants = cva("h-[1.5em] flex items-center gap-[0.5ch]", {
 	variants: {
 		intent: {
-			neutral: "[&&]-selection:surface-foreground-solid",
-			success: "text-success selection:surface-success-solid",
+			neutral: null,
+			success: "text-success [&&]-selection:surface-success-solid",
 			error: "text-error [&&]-selection:surface-error-solid",
-			warning: "text-warning selection:surface-warning-solid",
-			primary: "text-primary selection:surface-primary-solid",
-			secondary: "text-secondary selection:surface-secondary-solid",
+			warning: "text-warning [&&]-selection:surface-warning-solid",
+			primary: "text-primary [&&]-selection:surface-primary-solid",
+			secondary: "text-secondary [&&]-selection:surface-secondary-solid",
 		},
 		size: {
-			s: "text-3d font-10d",
-			m: "text-4d font-9d",
+			xs: "text-2d font-10d",
+			s: "text-3d font-9d",
+			m: "text-4d font-8d",
 			l: "text-5d font-8d",
+			xl: "text-6d font-8d",
 		},
 		required: {
 			true: "before:content-['✺']",
@@ -23,34 +25,29 @@ export const labelVariants = cva("h-[1.5em] flex items-center gap-[0.5ch]", {
 	},
 	compoundVariants: [
 		{
-			intent: "error",
+			intent: ["error", "neutral"],
 			required: true,
-			className: "before:text-error-478d dark:before:text-error-740d",
+			className: "before:text-error",
 		},
 		{
 			intent: "primary",
 			required: true,
-			className: "before:text-primary-488d dark:before:text-primary-722d",
+			className: "before:text-primary",
 		},
 		{
 			intent: "secondary",
 			required: true,
-			className: "before:text-secondary-450d dark:before:text-secondary-720d",
+			className: "before:text-secondary",
 		},
 		{
 			intent: "success",
 			required: true,
-			className: "before:text-success-440d dark:before:text-success-700d",
+			className: "before:text-success",
 		},
 		{
 			intent: "warning",
 			required: true,
-			className: "before:text-warning-455d dark:before:text-warning-760d",
-		},
-		{
-			intent: "neutral",
-			required: true,
-			className: "before:text-error-478d dark:before:text-error-740d",
+			className: "before:text-warning",
 		},
 	],
 	defaultVariants: {
@@ -60,6 +57,9 @@ export const labelVariants = cva("h-[1.5em] flex items-center gap-[0.5ch]", {
 	},
 });
 
+export type LabelProps = React.ComponentProps<"label"> &
+	VariantProps<typeof labelVariants>;
+
 export function Label({
 	intent,
 	size,
@@ -68,7 +68,7 @@ export function Label({
 	htmlFor,
 	required,
 	...props
-}: React.ComponentProps<"label"> & VariantProps<typeof labelVariants>) {
+}: LabelProps) {
 	return (
 		<label
 			className={cn(labelVariants({ intent, size, required }), className)}
