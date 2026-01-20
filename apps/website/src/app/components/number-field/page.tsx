@@ -2,7 +2,7 @@ import { NumberField } from "@/components/ui/fields/number";
 import { HighlightedCode } from "@/components/ui/highlighted-code";
 import { Title } from "@/components/ui/typography/title";
 
-export default function TextFieldPage() {
+export default function NumberFieldPage() {
 	return (
 		<div
 			className="max-w-200 min-h-full bg-1 mx-auto p-18d flex flex-col gap-16d grow [&&]-pb-20"
@@ -18,7 +18,7 @@ export default function TextFieldPage() {
 				</p>
 			</div>
 			<div>
-				<Title size={2}>Installation</Title>
+				<Title size={5}>Installation</Title>
 				<HighlightedCode
 					code="bunx @playoffthecuff/smoothed@latest add number-field"
 					language="yaml"
@@ -26,10 +26,10 @@ export default function TextFieldPage() {
 				/>
 			</div>
 			<hr className="mt-16d mb-12d" />
-			<Title size={2}>Variants:</Title>
-			<div className="flex flex-col gap-16d items-start w-60">
+			<Title size={5}>Variants:</Title>
+			<div className="flex flex-col gap-16d items-start">
 				<div>
-					<Title size={3}>Options</Title>
+					<Title size={4}>Options</Title>
 					<div className="flex flex-col gap-16d">
 						<NumberField label="Only Label" defaultValue={100} id="ol" />
 						<NumberField
@@ -45,10 +45,16 @@ export default function TextFieldPage() {
 							defaultValue={100}
 							id="wm"
 						/>
+						<NumberField
+							label="Popover message"
+							popoverMessage="Popover message"
+							defaultValue={100}
+							id="pm"
+						/>
 					</div>
 				</div>
 				<div>
-					<Title size={3}>Size</Title>
+					<Title size={4}>Size</Title>
 					<div className="flex flex-col gap-16d">
 						<NumberField
 							label="Small"
@@ -76,29 +82,58 @@ export default function TextFieldPage() {
 						/>
 					</div>
 				</div>
+				<div className="w-full">
+					<Title size={4}>Width</Title>
+					<div className="flex flex-col gap-16d">
+						<NumberField
+							label="Narrow"
+							message="narrow"
+							defaultValue={100}
+							width="narrow"
+							hint="Small"
+							id="small"
+						/>
+						<NumberField
+							label="Normal"
+							message="normal"
+							defaultValue={100}
+							width="normal"
+							hint="Small"
+							id="small"
+						/>
+						<NumberField
+							label="Wide"
+							message="wide"
+							defaultValue={100}
+							width="wide"
+							hint="Small"
+							id="small"
+						/>
+						<NumberField
+							label="Fill"
+							message="fill"
+							defaultValue={100}
+							width="fill"
+							hint="Small"
+							id="small"
+						/>
+					</div>
+				</div>
 				<div>
-					<Title size={3}>Color</Title>
+					<Title size={4}>Intent</Title>
 					<div className="flex flex-col gap-16d">
 						<NumberField
 							label="Neutral"
 							message="neutral"
 							defaultValue={100}
-							color={"neutral"}
+							intent={"neutral"}
 							hint="neutral"
 							id="neutral"
 						/>
 						<NumberField
-							label="Primary"
-							message="primary"
-							defaultValue={100}
-							color="primary"
-							hint="Primary"
-							id="primary"
-						/>
-						<NumberField
 							label="Secondary"
 							message="secondary"
-							color="secondary"
+							intent="secondary"
 							defaultValue={100}
 							hint="Secondary"
 							id="secondary"
@@ -106,7 +141,7 @@ export default function TextFieldPage() {
 					</div>
 				</div>
 				<div>
-					<Title size={3}>Appearance</Title>
+					<Title size={4}>Appearance</Title>
 					<div className="flex flex-col gap-16d">
 						<NumberField
 							label="Solid"
@@ -127,7 +162,7 @@ export default function TextFieldPage() {
 					</div>
 				</div>
 				<div>
-					<Title size={3}>Status</Title>
+					<Title size={4}>Status</Title>
 					<div className="flex flex-col gap-16d">
 						<NumberField
 							label="Valid"
@@ -156,7 +191,7 @@ export default function TextFieldPage() {
 					</div>
 				</div>
 				<div>
-					<Title size={3}>Shape</Title>
+					<Title size={4}>Shape</Title>
 					<div className="flex flex-col gap-16d">
 						<NumberField
 							label="Square"
@@ -185,7 +220,7 @@ export default function TextFieldPage() {
 					</div>
 				</div>
 				<div>
-					<Title size={3}>State</Title>
+					<Title size={4}>State</Title>
 					<div className="flex flex-col gap-16d">
 						<NumberField
 							label="Label"
