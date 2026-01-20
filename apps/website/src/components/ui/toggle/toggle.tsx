@@ -20,9 +20,11 @@ const toggleVariants = cva(
 				warning: "focus-visible:shadow-focus-warning",
 			},
 			size: {
+				xs: "text-2d font-10d",
 				s: "text-3d font-10d",
 				m: "text-4d font-9d",
 				l: "text-5d font-8d",
+				xl: "text-6d font-7d",
 			},
 			lifted: {
 				true: null,
@@ -37,8 +39,7 @@ const toggleVariants = cva(
 			appearance: {
 				solid: null,
 				subtle: null,
-				outline:
-					"before:outline-offset-1.6 border-1.6 focus-visible:border-none",
+				outline: "before:outline-offset-3d border-3d focus-visible:border-none",
 				ghost: null,
 				text: null,
 			},
@@ -345,6 +346,9 @@ const intentToColors = {
 	visited: "visited",
 } as const;
 
+export type ToggleProps = BaseToggle.Props &
+	VariantProps<typeof toggleVariants> & { animated?: boolean };
+
 export function Toggle({
 	className,
 	intent,
@@ -355,20 +359,21 @@ export function Toggle({
 	disabled,
 	loading,
 	lifted,
+	animated = true,
 	effect,
 	onMouseDown,
 	onMouseUp,
 	onKeyDown,
 	onKeyUp,
 	...props
-}: BaseToggle.Props & VariantProps<typeof toggleVariants>) {
+}: ToggleProps) {
 	const effects = useWaveAnimate({
 		animateClassName: `before:animate-wave-${intentToColors[intent ?? "neutral"]}`,
 		onKeyDown,
 		onKeyUp,
 		onMouseDown,
 		onMouseUp,
-		disabled: appearance === "text",
+		disabled: appearance === "text" || !animated,
 	});
 	return (
 		<span className={wrapperVariants({ loading, disabled })}>

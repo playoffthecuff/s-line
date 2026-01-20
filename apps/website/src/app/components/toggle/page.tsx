@@ -19,7 +19,7 @@ export default function TogglePage() {
 				<p>A user-activated, toggleable interactive component.</p>
 			</div>
 			<div>
-				<Title size={2}>Installation</Title>
+				<Title size={5}>Installation</Title>
 				<HighlightedCode
 					code="bunx @playoffthecuff/smoothed@latest add toggle"
 					language="yaml"
@@ -27,10 +27,20 @@ export default function TogglePage() {
 				/>
 			</div>
 			<hr className="mt-16d mb-12d" />
-			<Title size={2}>Variants:</Title>
+			<Title size={5}>Variants:</Title>
 			<div>
-				<Title size={3}>Size</Title>
+				<Title size={4}>Size</Title>
 				<div className="flex flex-wrap gap-16d items-center">
+					<div className="flex gap-10d items-center">
+						<Toggle
+							size={"xs"}
+							effect={"fill"}
+							onPressedChange={(v) => console.log("toggled to", v)}
+						>
+							<HeartIcon />
+						</Toggle>
+						Extra Small - XS
+					</div>
 					<div className="flex gap-10d items-center">
 						<Toggle
 							size={"s"}
@@ -61,10 +71,20 @@ export default function TogglePage() {
 						</Toggle>
 						Large - L
 					</div>
+					<div className="flex gap-10d items-center">
+						<Toggle
+							size={"xl"}
+							onPressedChange={(v) => console.log("toggled to", v)}
+							effect={"fill"}
+						>
+							<HeartIcon />
+						</Toggle>
+						Extra Large - L
+					</div>
 				</div>
 			</div>
 			<div>
-				<Title size={3}>Toggle Effect</Title>
+				<Title size={4}>Toggle Effect</Title>
 				<div className="flex flex-wrap gap-16d items-center">
 					<div className="flex gap-10d items-center">
 						<Toggle
@@ -105,7 +125,7 @@ export default function TogglePage() {
 				</div>
 			</div>
 			<div>
-				<Title size={3}>Shape</Title>
+				<Title size={4}>Shape</Title>
 				<div className="flex flex-wrap gap-16d items-center">
 					<div className="flex gap-10d items-center">
 						<Toggle
@@ -140,7 +160,7 @@ export default function TogglePage() {
 				</div>
 			</div>
 			<div>
-				<Title size={3}>Intent</Title>
+				<Title size={4}>Intent</Title>
 				<div className="flex flex-wrap gap-16d items-center">
 					<div className="flex gap-10d items-center">
 						<Toggle
@@ -215,7 +235,7 @@ export default function TogglePage() {
 				</div>
 			</div>
 			<div>
-				<Title size={3}>Appearance</Title>
+				<Title size={4}>Appearance</Title>
 				<div className="grid grid-cols-[repeat(5,max-content)] w-fit gap-16d">
 					<span className="-mb-4">Solid</span>
 					<span className="-mb-4">Subtle</span>
@@ -572,7 +592,7 @@ export default function TogglePage() {
 							<HeartIcon />
 						</Toggle>
 					</div>
-					<Title size={3} className="col-span-5 -mb-4">
+					<Title size={4} className="col-span-5 -mb-4">
 						Lifted
 					</Title>
 					<div className="flex gap-10d items-center">
@@ -986,7 +1006,7 @@ export default function TogglePage() {
 				</div>
 			</div>
 			<div>
-				<Title size={3}>State</Title>
+				<Title size={4}>State</Title>
 				<div className="flex flex-wrap gap-16d items-start">
 					<div className="flex gap-10d items-center">
 						<Toggle
