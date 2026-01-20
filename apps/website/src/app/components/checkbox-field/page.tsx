@@ -18,7 +18,7 @@ export default function CheckboxFieldPage() {
 				</p>
 			</div>
 			<div>
-				<Title size={2}>Installation</Title>
+				<Title size={5}>Installation</Title>
 				<HighlightedCode
 					code="bunx @playoffthecuff/smoothed@latest add checkbox-field"
 					language="yaml"
@@ -26,10 +26,10 @@ export default function CheckboxFieldPage() {
 				/>
 			</div>
 			<hr className="mt-16d mb-12d" />
-			<Title size={2}>Variants:</Title>
+			<Title size={5}>Variants:</Title>
 			<div className="flex flex-col gap-16d items-start w-60">
 				<div>
-					<Title size={3}>Options</Title>
+					<Title size={4}>Options</Title>
 					<div className="flex flex-col gap-16d">
 						<CheckboxField label="Only Label" id="ol" defaultChecked />
 						<CheckboxField label="Hint" hint="Hint" id="hint" defaultChecked />
@@ -40,11 +40,24 @@ export default function CheckboxFieldPage() {
 							id="wm"
 							defaultChecked
 						/>
+						<CheckboxField
+							label="Popover message"
+							popoverMessage="Popover message"
+							id="pm"
+							defaultChecked
+						/>
 					</div>
 				</div>
 				<div>
-					<Title size={3}>Size</Title>
+					<Title size={4}>Size</Title>
 					<div className="flex flex-col gap-16d">
+						<CheckboxField
+							label="Extra Small"
+							message="XS - Extra Small"
+							size="xs"
+							hint="Extra Small"
+							id="x_small"
+						/>
 						<CheckboxField
 							label="Small"
 							message="S - Small"
@@ -61,15 +74,22 @@ export default function CheckboxFieldPage() {
 						/>
 						<CheckboxField
 							label="Large"
-							message="L - large"
+							message="L - Large"
 							size="l"
 							hint="Large"
 							id="large"
 						/>
+						<CheckboxField
+							label="Extra Large"
+							message="XL - Extra Large"
+							size="xl"
+							hint="Extra Large"
+							id="x_large"
+						/>
 					</div>
 				</div>
 				<div>
-					<Title size={3}>Appearance</Title>
+					<Title size={4}>Appearance</Title>
 					<div className="flex flex-col gap-16d">
 						<CheckboxField
 							label="Outline"
@@ -89,7 +109,26 @@ export default function CheckboxFieldPage() {
 					</div>
 				</div>
 				<div>
-					<Title size={3}>Status</Title>
+					<Title size={4}>Intent</Title>
+					<div className="flex flex-col gap-16d">
+						<CheckboxField
+							label="Neutral"
+							message="neutral"
+							hint="Neutral"
+							id="neutral"
+							intent={"neutral"}
+						/>
+						<CheckboxField
+							label="Secondary"
+							message="secondary"
+							hint="Secondary"
+							id="secondary"
+							intent={"secondary"}
+						/>
+					</div>
+				</div>
+				<div>
+					<Title size={4}>Status</Title>
 					<div className="flex flex-col gap-16d">
 						<CheckboxField
 							label="Valid"
@@ -115,7 +154,7 @@ export default function CheckboxFieldPage() {
 					</div>
 				</div>
 				<div>
-					<Title size={3}>Shape</Title>
+					<Title size={4}>Shape</Title>
 					<div className="flex flex-col gap-16d">
 						<CheckboxField
 							label="Square"
@@ -141,7 +180,7 @@ export default function CheckboxFieldPage() {
 					</div>
 				</div>
 				<div>
-					<Title size={3}>State</Title>
+					<Title size={4}>State</Title>
 					<div className="flex flex-col gap-16d">
 						<CheckboxField
 							label="Label"

@@ -1,3 +1,4 @@
+import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils/cn";
 import type { CheckboxProps } from "../checkbox/checkbox";
 import Checkbox from "../checkbox/checkbox";
@@ -6,9 +7,15 @@ import { SuccessIcon } from "../icons/success";
 import { WarningIcon } from "../icons/warning";
 import { IntentMessage } from "../intent-message/intent-message";
 import { Label } from "../label/label";
+import { Popover, PopoverPortal, PopoverTrigger } from "../popover/popover";
 import { HintButton } from "./hint-button";
 
-type Props = CheckboxProps & { label: string; message?: string; hint?: string };
+export type CheckboxFieldProps = CheckboxProps & {
+	label: string;
+	message?: string;
+	popoverMessage?: string;
+	hint?: string;
+};
 
 const statusToIntent = {
 	valid: "success",
@@ -22,50 +29,88 @@ const intentToIcon = {
 	error: ErrorIcon,
 };
 
+const intentMessageWrapperVariants = cva(null, {
+	variants: {
+		size: {
+			xs: "-translate-y-[4.25px]",
+			s: "-translate-y-[4px]",
+			m: "-translate-y-[5.25px]",
+			l: "-translate-y-[5.5px]",
+			xl: "-translate-y-[7px]",
+		},
+	},
+	defaultVariants: {
+		size: "m",
+	},
+});
+
 export function CheckboxField({
 	hint,
 	label,
 	message,
+	popoverMessage,
+	intent,
 	size,
 	required,
+	children,
 	shape,
 	id,
 	...checkboxProps
-}: Props) {
-	const intent = checkboxProps.status
+}: CheckboxFieldProps) {
+	const iconIntent = checkboxProps.status
 		? statusToIntent[checkboxProps.status]
 		: undefined;
+	const intentMessage = (
+		<IntentMessage
+			intent={iconIntent}
+			size={size}
+			iconStart={iconIntent ? intentToIcon[iconIntent] : undefined}
+		>
+			{popoverMessage ? popoverMessage : message}
+		</IntentMessage>
+	);
+	const checkbox = (
+		<Checkbox
+			size={size}
+			{...checkboxProps}
+			required={required}
+			intent={intent}
+			shape={shape}
+			id={id}
+		/>
+	);
 	return (
 		<div className="grid grid-cols-[repeat(2,max-content)] gap-x-8d">
-			<Checkbox
-				size={size}
-				{...checkboxProps}
-				required={required}
-				shape={shape}
-				id={id}
-			/>
-			<div className="flex items-center gap-x-8d">
-				<Label intent={intent} size={size} required={required} htmlFor={id}>
+			{popoverMessage ? (
+				<Popover open>
+					<PopoverTrigger>{checkbox}</PopoverTrigger>
+					<PopoverPortal>{intentMessage}</PopoverPortal>
+				</Popover>
+			) : (
+				checkbox
+			)}
+			<div className="flex items-center gap-x-[1ch]">
+				<Label
+					intent={iconIntent ?? intent}
+					size={size}
+					required={required}
+					htmlFor={id}
+				>
 					{label}
 				</Label>
-				{hint && <HintButton description={hint} size={size} shape={shape} />}
+				{hint && (
+					<HintButton size={size} shape={shape}>
+						{hint}
+					</HintButton>
+				)}
+				{children}
 			</div>
 			{message && (
-				<IntentMessage
-					intent={intent}
-					size={size}
-					iconStart={intent ? intentToIcon[intent] : undefined}
-					className={cn(
-						"col-start-2",
-						size === "m"
-							? "-translate-y-2"
-							: size === "s"
-								? "-translate-y-[7px]"
-								: "-translate-y-[10px]",
-					)}
+				<span
+					className={cn("col-start-2", intentMessageWrapperVariants({ size }))}
 				>
-					{message}
-				</IntentMessage>
+					{intentMessage}
+				</span>
 			)}
 		</div>
 	);
