@@ -45,7 +45,7 @@ const DESCRIPTION = "Copy installation command:";
 
 const items = [
 	{ registryName: "airplane-icon", Component: AirplaneIcon, title: "Airplane" },
-	{ registry: "calendar", Component: CalendarIcon, title: "Calendar" },
+	{ registryName: "calendar", Component: CalendarIcon, title: "Calendar" },
 	{ registryName: "check-icon", Component: CheckIcon, title: "Check" },
 	{
 		registryName: "chevron-down-icon",
