@@ -14,6 +14,7 @@ export function ThemeToggle() {
 			onPressedChange={(v) => setTheme(v ? "light" : "dark")}
 			shape={"circular"}
 			intent={"secondary"}
+			suppressHydrationWarning
 		>
 			{theme === "light" ? <SunIcon /> : <MoonIcon />}
 		</Toggle>
