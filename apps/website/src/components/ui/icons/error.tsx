@@ -16,8 +16,8 @@ export function ErrorIcon({ size = "1.25em", fill, ...props }: IconProps) {
 			) : (
 				<g stroke="currentColor">
 					<circle cx="12" cy="12" r="9" strokeWidth="2" fill="none" />
-					<path d="M8.5 15.5L15.5 8.5" strokeWidth="2.5" />
-					<path d="M15.5 15.5L8.5 8.5" strokeWidth="2.5" />
+					<path d="M8.5 15.5L15.5 8.5" strokeWidth="2" />
+					<path d="M15.5 15.5L8.5 8.5" strokeWidth="2" />
 				</g>
 			)}
 		</svg>
