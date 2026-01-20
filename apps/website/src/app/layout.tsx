@@ -5,8 +5,9 @@ import "./globals.css";
 import { ThemeToggle } from "@/components/features/theme/toggle";
 import { Link } from "@/components/ui/link/link";
 
-const nunitoFont = localFont({
+const sansFont = localFont({
 	src: "./nunito.ttf",
+	variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -20,7 +21,11 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en" suppressHydrationWarning className={nunitoFont.className}>
+		<html
+			lang="en"
+			suppressHydrationWarning
+			className={`${sansFont.variable} ${sansFont.className}`}
+		>
 			<body
 				className="bg text-1 overflow-y-auto selection:surface-primary-solid pt-12"
 				style={{ minHeight: "100svh" }}
