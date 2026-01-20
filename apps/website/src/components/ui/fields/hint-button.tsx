@@ -1,7 +1,12 @@
 import { cva } from "class-variance-authority";
 import { Button, type ButtonProps } from "../button/button";
 import { InfoIcon } from "../icons/info";
-import { Popover, type PopoverPortalProps } from "../popover/popover";
+import {
+	Popover,
+	PopoverPortal,
+	type PopoverPortalProps,
+	PopoverTrigger,
+} from "../popover/popover";
 
 const hintButtonVariants = cva("[&&]-cursor-help", {
 	variants: {
@@ -23,7 +28,7 @@ export type HintButtonProps = PopoverPortalProps & ButtonProps;
 export function HintButton({ size, children, ...props }: HintButtonProps) {
 	return (
 		<Popover {...props}>
-			<Popover.Trigger>
+			<PopoverTrigger>
 				<Button
 					shape={"circular"}
 					size={size}
@@ -39,10 +44,10 @@ export function HintButton({ size, children, ...props }: HintButtonProps) {
 						className="fill-primary-d"
 					/>
 				</Button>
-			</Popover.Trigger>
-			<Popover.Portal size={size} {...props}>
+			</PopoverTrigger>
+			<PopoverPortal size={size} {...props}>
 				{children}
-			</Popover.Portal>
+			</PopoverPortal>
 		</Popover>
 	);
 }
