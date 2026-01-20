@@ -488,18 +488,11 @@ const FieldDecrement = ({
 		})}
 	>
 		{Content &&
-			(typeof Content === "string" ? (
+			(typeof Content === "string" || typeof Content === "number" ? (
 				Content
 			) : (
 				<Content className={cn(iconVariants({ size, appearance }))} />
 			))}
-		{/* {shape === "square" ? (
-			<TriangleDownSharpIcon
-				className={cn(iconVariants({ size, appearance }))}
-			/>
-		) : (
-			<TriangleDownRoundedIcon className={iconVariants({ size, appearance })} />
-		)} */}
 	</NumberField.Decrement>
 );
 
@@ -526,16 +519,11 @@ const FieldIncrement = ({
 		})}
 	>
 		{Content &&
-			(typeof Content === "string" ? (
+			(typeof Content === "string" || typeof Content === "number" ? (
 				Content
 			) : (
 				<Content className={cn(iconVariants({ size, appearance }))} />
 			))}
-		{/* {shape === "square" ? (
-			<TriangleUpSharpIcon className={iconVariants({ size, appearance })} />
-		) : (
-			<TriangleUpRoundedIcon className={iconVariants({ size, appearance })} />
-		)} */}
 	</NumberField.Increment>
 );
 
