@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils/cn";
 const headingVariants = cva("font-11d", {
 	variants: {
 		size: {
-			1: "text-8d",
-			2: "text-7d",
-			3: "text-6d",
-			4: "text-5d",
-			5: "text-4d",
-			6: "text-3d",
+			1: "text-3d",
+			2: "text-4d",
+			3: "text-5d",
+			4: "text-6d",
+			5: "text-7d",
+			6: "text-8d",
 		},
 	},
 	defaultVariants: {
@@ -17,52 +17,33 @@ const headingVariants = cva("font-11d", {
 	},
 });
 
-export type TitleProps = React.ComponentProps<"h1"> &
-	VariantProps<typeof headingVariants>;
+const sizeToHeading = {
+	1: "h6",
+	2: "h5",
+	3: "h4",
+	4: "h3",
+	5: "h2",
+	6: "h1",
+} as const;
 
-export function Title({ size, children, className, ...props }: TitleProps) {
-	switch (size) {
-		case 2: {
-			return (
-				<h2 className={cn(headingVariants({ size }), className)} {...props}>
-					{children}
-				</h2>
-			);
-		}
-		case 3: {
-			return (
-				<h3 className={cn(headingVariants({ size }), className)} {...props}>
-					{children}
-				</h3>
-			);
-		}
-		case 4: {
-			return (
-				<h4 className={cn(headingVariants({ size }), className)} {...props}>
-					{children}
-				</h4>
-			);
-		}
-		case 5: {
-			return (
-				<h5 className={cn(headingVariants({ size }), className)} {...props}>
-					{children}
-				</h5>
-			);
-		}
-		case 6: {
-			return (
-				<h6 className={cn(headingVariants({ size }), className)} {...props}>
-					{children}
-				</h6>
-			);
-		}
-		default: {
-			return (
-				<h1 className={cn(headingVariants({ size }), className)} {...props}>
-					{children}
-				</h1>
-			);
-		}
-	}
+type Sizes = typeof sizeToHeading;
+
+type Tag = Sizes[keyof Sizes];
+
+export type TitleProps = React.ComponentProps<"h1"> &
+	VariantProps<typeof headingVariants> & { as?: Tag };
+
+export function Title({
+	as,
+	size = 6,
+	children,
+	className,
+	...props
+}: TitleProps) {
+	const Heading = as ? as : sizeToHeading[size ?? 1];
+	return (
+		<Heading className={cn(headingVariants({ size }), className)} {...props}>
+			{children}
+		</Heading>
+	);
 }
