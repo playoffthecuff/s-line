@@ -15,7 +15,7 @@ export default function CardPage() {
 				<p>A visually distinct area with content</p>
 			</div>
 			<div>
-				<Title size={2}>Installation</Title>
+				<Title size={5}>Installation</Title>
 				<HighlightedCode
 					code="bunx @playoffthecuff/smoothed@latest add card"
 					language="yaml"
@@ -23,11 +23,11 @@ export default function CardPage() {
 				/>
 			</div>
 			<hr className="mt-16d mb-12d" />
-			<Title size={2}>Variants:</Title>
+			<Title size={5}>Variants:</Title>
 			<div className="max-w-60">
 				<Card>
 					<Card.Header className="p-16d">
-						<Card.Title>Title</Card.Title>
+						<Card.Title size={4}>Title</Card.Title>
 						<Card.Description>Description</Card.Description>
 					</Card.Header>
 					<hr className="text-muted opacity-64 mb-12d" />
