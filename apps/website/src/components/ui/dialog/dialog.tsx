@@ -10,7 +10,10 @@ export function Dialog({ children, ...props }: Props) {
 	return <BaseDialog.Root {...props}>{children}</BaseDialog.Root>;
 }
 
-Dialog.Trigger = ({ children, ...props }: BaseDialog.Trigger.Props) => (
+export const DialogTrigger = ({
+	children,
+	...props
+}: BaseDialog.Trigger.Props) => (
 	<BaseDialog.Trigger
 		{...props}
 		className="flex items-center justify-center surface-secondary-outline"
@@ -25,10 +28,13 @@ Dialog.Trigger = ({ children, ...props }: BaseDialog.Trigger.Props) => (
 Dialog.Close = BaseDialog.Close;
 Dialog.Description = BaseDialog.Description;
 Dialog.Title = BaseDialog.Title;
-Dialog.Header = ({ children }: { children: ReactNode }) => (
+export const DialogHeader = ({ children }: { children: ReactNode }) => (
 	<div className="flex gap-16d justify-between">{children}</div>
 );
-Dialog.Portal = ({ className, ...props }: BaseDialog.Popup.Props) => (
+export const DialogPortal = ({
+	className,
+	...props
+}: BaseDialog.Popup.Props) => (
 	<BaseDialog.Portal>
 		<BaseDialog.Backdrop className="fixed inset-0 min-h-dvh bg-foreground-200d opacity-30 transition-all data-[ending-style]:opacity-0 data-[starting-style]:opacity-0 dark:opacity-70 supports-[-webkit-touch-callout:none]:absolute" />
 		<BaseDialog.Popup
