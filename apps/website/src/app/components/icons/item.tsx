@@ -2,7 +2,11 @@
 
 import type { ReactNode } from "react";
 import { CopyButton } from "@/components/ui/buttons/copy";
-import { Popover } from "@/components/ui/popover/popover";
+import {
+	Popover,
+	PopoverPortal,
+	PopoverTrigger,
+} from "@/components/ui/popover/popover";
 
 export const IconWrapper = ({
 	children,
@@ -15,8 +19,10 @@ export const IconWrapper = ({
 	title: string;
 	description: string;
 }) => (
-	<Popover
-		content={
+	<Popover>
+		<PopoverTrigger>{children}</PopoverTrigger>
+		<PopoverPortal>
+			<Popover.Title>{title}</Popover.Title>
 			<div>
 				<div className="flex items-center justify-between">
 					<p>{description}</p>
@@ -26,9 +32,6 @@ export const IconWrapper = ({
 					{code}
 				</code>
 			</div>
-		}
-		title={title}
-	>
-		{children}
+		</PopoverPortal>
 	</Popover>
 );
