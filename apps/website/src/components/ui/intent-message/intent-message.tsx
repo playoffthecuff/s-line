@@ -2,45 +2,45 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils/cn";
 import type { IconProps } from "../icons/types";
 
-export const intentMessageVariants = cva("flex items-center gap-[0.5ch]", {
+export const intentMessageVariants = cva(
+	"flex items-center gap-[0.5ch] leading-none",
+	{
+		variants: {
+			intent: {
+				success: "text-success [&&]-selection:surface-success-solid",
+				error: "text-error [&&]-selection:surface-error-solid",
+				warning: "text-warning [&&]-selection:surface-warning-solid",
+				primary: "text-primary [&&]-selection:surface-primary-solid",
+				secondary: "text-secondary",
+				visited: "text-visited [&&]-selection:surface-visited-solid",
+			},
+			size: {
+				xs: "fs-2d font-9d",
+				s: "fs-3d font-9d",
+				m: "fs-4d font-8d",
+				l: "fs-5d font-7d",
+				xl: "fs-6d font-7d",
+			},
+		},
+		defaultVariants: {
+			size: "m",
+			intent: "secondary",
+		},
+	},
+);
+
+const iconVariants = cva(null, {
 	variants: {
 		intent: {
-			success: "text-success [&&]-selection:surface-success-solid",
-			error: "text-error [&&]-selection:surface-error-solid",
-			warning: "text-warning [&&]-selection:surface-warning-solid",
-			primary: "text-primary [&&]-selection:surface-primary-solid",
-			secondary: "text-secondary [&&]-selection:surface-secondary-solid",
-			visited: "text-visited [&&]-selection:surface-visited-solid",
+			success: "fill-success-d",
+			error: "fill-error-d",
+			warning: "fill-warning-d",
+			primary: "fill-primary-d",
+			secondary: "fill-secondary-d",
+			visited: "fill-visited-d",
 		},
-		size: {
-			xs: "text-2d font-9d",
-			s: "text-3d font-9d",
-			m: "text-4d font-8d",
-			l: "text-5d font-7d",
-			xl: "text-6d font-7d",
-		},
-	},
-	compoundVariants: [
-		{
-			size: ["l", "m", "s", "xl"],
-			className: "h-[0.84em]", //TODO migrate from text-#d to fs-#d with leading-none instead arbitrary height
-		},
-	],
-	defaultVariants: {
-		size: "m",
-		intent: "secondary",
 	},
 });
-
-const intentToColors = {
-	primary: "primary",
-	secondary: "secondary",
-	neutral: "foreground",
-	error: "error",
-	warning: "warning",
-	success: "success",
-	visited: "visited",
-} as const;
 
 export type IntentMessageProps = React.ComponentProps<"p"> &
 	VariantProps<typeof intentMessageVariants> & {
@@ -57,8 +57,6 @@ export function IntentMessage({
 	iconEnd: IconEnd,
 	...props
 }: IntentMessageProps) {
-	const intentColor =
-		intentToColors[(intent ?? "secondary") as keyof typeof intentToColors];
 	return (
 		<p
 			className={cn(intentMessageVariants({ intent, size }), className)}
@@ -68,7 +66,7 @@ export function IntentMessage({
 				<IconStart
 					size="1em"
 					fill="currentColor"
-					className={`fill-${intentColor}-d`}
+					className={iconVariants({ intent })}
 				/>
 			)}
 			{children}
@@ -76,7 +74,7 @@ export function IntentMessage({
 				<IconEnd
 					size="1em"
 					fill="currentColor"
-					className={`fill-${intentColor}-d`}
+					className={iconVariants({ intent })}
 				/>
 			)}
 		</p>

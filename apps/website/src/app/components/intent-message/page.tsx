@@ -21,7 +21,7 @@ export default function InputPage() {
 				<p>Component for displaying messages to the user.</p>
 			</div>
 			<div>
-				<Title size={2}>Installation</Title>
+				<Title size={5}>Installation</Title>
 				<HighlightedCode
 					code="bunx @playoffthecuff/smoothed@latest add intent-message"
 					language="yaml"
@@ -29,10 +29,10 @@ export default function InputPage() {
 				/>
 			</div>
 			<hr className="mt-16d mb-12d" />
-			<Title size={2}>Variants:</Title>
+			<Title size={5}>Variants:</Title>
 			<div className="flex flex-col gap-16d">
 				<div className="flex flex-col gap-4d">
-					<Title size={3}>Size</Title>
+					<Title size={4}>Size</Title>
 					<div className="flex flex-col gap-14d">
 						<IntentMessage size={"xs"}>Size Extra Small - XS</IntentMessage>
 						<IntentMessage size={"s"}>Size Small - S</IntentMessage>
@@ -42,7 +42,7 @@ export default function InputPage() {
 					</div>
 				</div>
 				<div className="flex flex-col gap-4d">
-					<Title size={3}>Intent</Title>
+					<Title size={4}>Intent</Title>
 					<div className="flex flex-col gap-14d">
 						<IntentMessage>Secondary Message</IntentMessage>
 						<IntentMessage intent="primary">Primary Message</IntentMessage>
@@ -53,7 +53,7 @@ export default function InputPage() {
 					</div>
 				</div>
 				<div className="flex flex-col gap-4d">
-					<Title size={3}>With custom icon(s)</Title>
+					<Title size={4}>With custom icon(s)</Title>
 					<div className="flex flex-col gap-14d">
 						<IntentMessage iconStart={HelpIcon} iconEnd={HelpIcon}>
 							Secondary Message
