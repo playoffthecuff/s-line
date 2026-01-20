@@ -140,21 +140,32 @@ export default defineConfig({
 		},
 	],
 	rules: [
-		[/^(bg|text|border|outline|fill)-([a-z]+)-(\\d{1,4})?d.*$/, ([_, prop, color, lightness], { theme }) => {
-			const hue = \`\${color}-hue\`;
-			if (!theme.colors?.[hue]) return;
-			const propToCss = {
-				bg: "background-color",
-				text: "color",
-				border: "border-color",
-				outline: "outline-color",
-				fill: "fill",
-			} as const;
-			const cssProp = propToCss[prop as keyof typeof propToCss];
-			return {
-				[cssProp]: computeOklch(+(lightness ?? +\`\${theme.colors?.[\`\${color}-lightness\`]}\` * 1000) / 1000, +(theme.colors?.[\`\${color}-hue\`] ?? 0), +(theme.colors?.[\`\${color}-chroma\`] ?? 0))
-			};
-		},],
+		[/^(bg|text|border|outline|fill)(?:-(x|y|t|r|b|l|s|e)?)?-([a-z]+)-(\\d{1,4})?d.*$/, ([_, prop, side, color, lightness], { theme }) => {
+				if (prop !== "border" && side) return;
+				const hue = \`\${color}-hue\`;
+				if (!theme.colors?.[hue] && color !== "transparent") return;
+				const propToCss = {
+					bg: "background-color",
+					text: "color",
+					border: \`border\${side ? \`-\${${side}[side]}\` : ''}-color\`,
+					outline: "outline-color",
+					fill: "fill",
+				} as const;
+				const cssProp = propToCss[prop as keyof typeof propToCss];
+				const cssValue =
+					color === "transparent"
+						? "transparent"
+						: computeOklch(
+								+(
+									lightness ?? +\`\${theme.colors?.[\`\${color}-lightness\`]}\` * 1000
+								) / 1000,
+								+(theme.colors?.[\`\${color}-hue\`] ?? 0),
+								+(theme.colors?.[\`\${color}-chroma\`] ?? 0),
+							);
+				return {
+					[cssProp]: cssValue,
+				};
+			},],
 		[/^shadow-(d|l|md|ml|ad|al)(?:-([a-z]+))?-(\\d+)d$/, ([_, mode, color, value], { theme }) => {
 			const hue = \`\${color ? color : 'background'}-hue\`;
 			if (!theme.colors?.[hue]) return;
@@ -212,16 +223,21 @@ export default defineConfig({
 			"outline-muted": "outline-foreground-700d dark:outline-foreground-450d",
 			"shadow-lifted-ia": "shadow-l-4d hover:shadow-l-6d active:shadow-l-2d dark:shadow-d-4d dark:hover:shadow-d-6d dark:active:shadow-d-2d",
 		},
-		[/^(border|outline)-([a-z]+)$/, ([_, prop, color], { theme }) => {
+		[/^(border|outline)(?:-(x|y|t|r|b|l|s|e)?)?-([a-z]+)$/, ([_, prop, side, color], { theme }) => {
+				if (prop === "outline" && side) return;
 				const lightness = theme.colors?.[\`\${color}-lightness\`];
 				if (!lightness) return;
-				const { THRESHOLD_BG_LIGHTNESS, MAX_LIGHTNESS, DARK_BG_DELTA_LIGHTNESS } =
-					SURFACE_CONFIG;
-				const l = +lightness * 1001;
+				const {
+					THRESHOLD_BG_LIGHTNESS,
+					MAX_LIGHTNESS,
+					DARK_BG_DELTA_LIGHTNESS,
+				} = SURFACE_CONFIG;
+				const l = +lightness * 1000;
 				const isSwapped = l <= THRESHOLD_BG_LIGHTNESS;
 				const swappedLightness =
 					(MAX_LIGHTNESS * (100 - DARK_BG_DELTA_LIGHTNESS / 2)) / 100;
-				return \`\${prop}-\${color}-d\${isSwapped ? \` dark:\${prop}-\${color}-\${swappedLightness}d\` : ""}\`;
+				const borderSide = side ? \`-\${side}\` : "";
+				return \`	\${prop}\${borderSide}-\${color}-d\${isSwapped ? \` dark:\${prop}\${borderSide}-\${color}-\${swappedLightness}d\` : ""}\`;
 			},],
 		[/^size-(\\d+)d$/, ([_, value]) => \`w-\${value}d h-\${value}d\`,],
 		[/^text-(\\d+)d$/, ([_, value]) => \`fs-\${value}d leading-\${value}ld\`],
