@@ -45,22 +45,12 @@ const DESCRIPTION = "Copy installation command:";
 
 const items = [
 	{ registryName: "airplane-icon", Component: AirplaneIcon, title: "Airplane" },
-	{ registryName: "calendar", Component: CalendarIcon, title: "Calendar" },
+	{ registryName: "calendar-icon", Component: CalendarIcon, title: "Calendar" },
 	{ registryName: "check-icon", Component: CheckIcon, title: "Check" },
 	{
 		registryName: "chevron-down-icon",
 		Component: ChevronDownIcon,
 		title: "Check Down",
-	},
-	{
-		registryName: "chevron-up-down-icon",
-		Component: ChevronUpDownIcon,
-		title: "Check Up Down",
-	},
-	{
-		registryName: "chevron-up-icon",
-		Component: ChevronUpIcon,
-		title: "Chevron Up",
 	},
 	{
 		registryName: "chevron-left-icon",
@@ -71,6 +61,16 @@ const items = [
 		registryName: "chevron-right-icon",
 		Component: ChevronRightIcon,
 		title: "Chevron Right",
+	},
+	{
+		registryName: "chevron-up-down-icon",
+		Component: ChevronUpDownIcon,
+		title: "Check Up Down",
+	},
+	{
+		registryName: "chevron-up-icon",
+		Component: ChevronUpIcon,
+		title: "Chevron Up",
 	},
 	{ registryName: "copy-icon", Component: CopyIcon, title: "Copy" },
 	{ registryName: "diskette-icon", Component: DisketteIcon, title: "Diskette" },
